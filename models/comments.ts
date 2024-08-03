@@ -7,4 +7,10 @@ export interface Comments {
   created_at: string
 }
 
-export interface replies {}
+export interface Replies {
+  id: number
+  user_id: number
+  parent_id: number
+  body: string
+  created_at: string
+}
