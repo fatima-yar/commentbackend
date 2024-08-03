@@ -4,7 +4,7 @@
 export async function up(knex) {
   return knex.schema.createTable('comments', (table) => {
     table.increments('id')
-    table.string('user_url')
+    table.integer('user_id')
     table.string('body')
     table.string('created_at')
   })
