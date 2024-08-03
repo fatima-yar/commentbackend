@@ -6,3 +6,5 @@ export interface Comments {
   body: string
   created_at: string
 }
+
+export interface replies {}
