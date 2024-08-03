@@ -1,4 +1,10 @@
-import { Comments, Replies } from '../../models/comments'
+import { comment } from 'postcss'
+import {
+  Comments,
+  NewComment,
+  NewCommentsData,
+  Replies,
+} from '../../models/comments'
 import db from '../db/connection'
 
 // export async function getAllComments(): Promise<Comments[]> {
@@ -46,9 +52,29 @@ export async function getAllComments() {
   return commentsWithReplies as Comments[]
 }
 
-export async function getAllReplies() {
-  const replies = await db('replies')
-    .join('comments', 'comments.id', 'replies.parent_id')
-    .select()
-  return replies as Replies[]
+// export async function getAllReplies() {
+//   const replies = await db('replies')
+//     .join('comments', 'comments.id', 'replies.parent_id')
+//     .select()
+//   return replies as Replies[]
+// }
+
+export async function addComment(newComment: NewCommentsData) {
+  const res = await db('comments').insert(newComment)
+  return res
+}
+
+export async function editComment(updatedComment: NewComment) {
+  const { id, user_id, user_name, img_url, body, created_at } = updatedComment
+  return db('comments')
+    .where({ id })
+    .update({ user_id, user_name, img_url, body, created_at })
+}
+
+export async function deleteComment(id: number) {
+  return db('comments').where({ id }).delete()
+}
+
+export async function updateComment(id: number, body: Record<string, any>) {
+  return db('comments').where({ id }).update(body)
 }
