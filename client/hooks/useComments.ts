@@ -4,13 +4,12 @@ import {
   useQueryClient,
   MutationFunction,
 } from '@tanstack/react-query'
-import { getComments } from '../apis/comments.ts'
+import { getAllComments, getComments } from '../apis/comments.ts'
 
 export function useComments() {
-  const query = useQuery({ queryKey: ['comments'], queryFn: getComments })
+  const query = useQuery({ queryKey: ['comments'], queryFn: getAllComments })
   return {
     ...query,
-    // Extra queries go here e.g. addFruit: useAddFruit()
   }
 }
 

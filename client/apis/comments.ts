@@ -6,7 +6,7 @@ export interface AddComment {
 }
 const rootUrl = '/api/v1/comments'
 
-export async function fetchComments(): Promise<string[]> {
+export async function getAllComments(): Promise<string[]> {
   const res = await request.get(rootUrl)
   return res.body
 }

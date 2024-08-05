@@ -5,10 +5,4 @@ interface CommentListProps {
   comments: Comments[]
 }
 
-export default function AllComments() {
-  return (
-    <>
-      <div></div>
-    </>
-  )
-}
+export default function AllComments() {}
