@@ -15,7 +15,7 @@ function App() {
 
         {/* <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul> */}
 
-        <Comments currentUserId="1" />
+        {/* <Comments currentUserId="1" /> */}
       </div>
     </>
   )

@@ -58,11 +58,5 @@ router.patch('/:id', async (req, res) => {
     res.sendStatus(500)
   }
 })
-// router.get('/reply', async (req,res, next)=>{
-//   try {
-//     const replies = await db.getAllReplies()
-//     res.json({replies: replies.map((reply)=> reply.body)})
-//   }
-// })
 
 export default router
