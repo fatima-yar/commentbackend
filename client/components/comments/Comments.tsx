@@ -6,7 +6,7 @@ import {
   updateComment as updateCommentApi,
 } from '../../../server/dummy data/api'
 import Comment from './Comment'
-import CommentForm from './CommentForm'
+import CommentForm from './oldCommentForm'
 
 interface CommentsProps {
   currentUserId: string

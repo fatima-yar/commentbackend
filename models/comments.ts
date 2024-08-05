@@ -16,6 +16,7 @@ export interface NewComment {
   parent_id: number
   created_at: string
 }
+
 export type CommentData = Omit<Comments, 'comments' | 'timestamp'>
 
 export type NewCommentsData = Omit<NewComment, 'comments' | 'timestamp'>
