@@ -28,7 +28,7 @@ export async function addComment(
   const newComment = {
     body: comment,
     parent_id: parent_id,
-    user_id: '1', // Default userId (if needed)
+    user_id: '3', // Default userId (if needed)
 
     created_at: new Date().toISOString(),
   }

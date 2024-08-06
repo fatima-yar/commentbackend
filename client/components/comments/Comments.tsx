@@ -1,27 +1,28 @@
 import { useEffect, useState } from 'react'
-import {
-  Comments as CommentsInt,
-  NewCommentsData,
-} from '../../../models/comments'
+import { Comments as CommentsInt } from '../../../models/comments'
 import {
   getAllComments,
   addComment as addCommentApi,
 } from '../../apis/comments'
 import Comment from './Comment'
 import CommentForm from './CommentForm'
+
 interface CommentsProps {
   currentUserId: number
 }
+
 interface ActiveComment {
   id: number
   type: 'replying' | 'editing'
 }
+
 export default function Comments({ currentUserId }: CommentsProps) {
   const [backendComments, setBackendComments] = useState<CommentsInt[]>([])
   const [activeComment, setActiveComment] = useState<ActiveComment | null>(null)
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parent_id === null,
   )
+
   function getReplies(commentId: number): CommentsInt[] {
     return backendComments
       .filter((backendComment) => backendComment.parent_id === commentId)
@@ -30,6 +31,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
       )
   }
+
   const addComment = (text: string, parent_id: number | null) => {
     addCommentApi(text, parent_id)
       .then((comment: CommentsInt) => {
@@ -40,6 +42,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
         console.log('Failed to add comment', error)
       })
   }
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -52,6 +55,8 @@ export default function Comments({ currentUserId }: CommentsProps) {
     fetchComments()
   }, [])
 
+  console.log(currentUserId)
+
   return (
     <div>
       <h3>Comments</h3>
@@ -61,22 +66,19 @@ export default function Comments({ currentUserId }: CommentsProps) {
         handleSubmit={(text) => addComment(text, null)}
         parent_id={null}
         hasCancelButton={false}
-        handleCancel={function (): void {
+        handleCancel={() => {
           throw new Error('Function not implemented.')
         }}
       />
-
       <ul>
         {rootComments.map((rootComment) => (
-          <>
-            <li key={rootComment.id}></li>
+          <li key={rootComment.id}>
             <Comment
-              key={rootComment.id}
               comment={rootComment}
               replies={getReplies(rootComment.id)}
               currentUserId={currentUserId}
             />
-          </>
+          </li>
         ))}
       </ul>
     </div>
