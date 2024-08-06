@@ -8,7 +8,7 @@ const router = Router()
 router.get('/', async (req, res) => {
   try {
     const comments = await db.getAllComments()
-    res.json({ comments: comments })
+    res.json({ comments: comments.reverse() })
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Something went wrong' })
