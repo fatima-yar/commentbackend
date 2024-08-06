@@ -20,6 +20,11 @@ const Comment: React.FC<CommentProps> = ({ comment, replies }) => {
       </div>
 
       <div className="text-lg">{comment.body}</div>
+      <div className="flex gap-2 text-sm text-gray-500">
+        <button>Reply</button>
+        <button>Edit</button>
+        <button>Delete</button>
+      </div>
 
       <div className=" text-gray-600">
         {replies.length > 0 && (
