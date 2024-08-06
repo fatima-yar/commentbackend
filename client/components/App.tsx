@@ -1,4 +1,5 @@
 import { useFruits } from '../hooks/useFruits.ts'
+import AddComments from './comments/AddComments.tsx'
 import Comments from './comments/Comments.tsx'
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
           Fullstack Boilerplate - with Fruits!
         </h1>
         <Comments currentUserId="1" />
+        {/* <AddComments /> */}
       </div>
     </>
   )
