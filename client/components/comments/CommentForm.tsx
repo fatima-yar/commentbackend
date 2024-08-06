@@ -4,7 +4,7 @@ import { addComment } from '../../apis/comments'
 interface CommentFormProps {
   handleSubmit: (text: string) => void
   submitLabel: string
-  parent_id?: string | null
+  parent_id?: number | null
   hasCancelButton: boolean
   handleCancel: () => void
   initialValue?: string

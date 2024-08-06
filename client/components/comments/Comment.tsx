@@ -5,6 +5,11 @@ interface CommentProps {
   replies: CommentsInt[]
   currentUserId: number
   parent_id?: number | null
+  deleteComment: (commentId: string) => void
+  activeComment: ActiveComment | null
+  setActiveComment: (comment: ActiveComment | null) => void
+  updateComment: (commentId: number) => void
+  addComment: (text: string, parent_id: number | null) => void
 }
 
 interface ActiveComment {
@@ -17,17 +22,32 @@ const Comment: React.FC<CommentProps> = ({
   replies,
   currentUserId,
   parent_id = null,
+  deleteComment,
+  updateComment,
+  addComment,
+  activeComment,
+  setActiveComment,
 }) => {
   const canReply = Boolean(currentUserId)
   const canEdit = currentUserId === comment.user_id
   const canDelete = currentUserId === comment.user_id
+  const replyId = parent_id ? parent_id : comment.id
+  const createAt = new Date(comment.created_at).toLocaleString()
+  const isReplying =
+    activeComment &&
+    activeComment.id === comment.id &&
+    activeComment.type === 'replying'
 
+  const isEditing =
+    activeComment &&
+    activeComment.id === comment.id &&
+    activeComment.type === 'editing'
   return (
     <div className="pl-4 pt-8">
       <div className="flex gap-2">
         <img src={`./${comment.img_url}.png`} alt="icon" width="40px" />
         <div className="text-lg">{comment.user_name}</div>
-        <div className="pt-2 text-xs ">{comment.created_at}</div>
+        <div className="pt-2 text-xs ">{createAt}</div>
       </div>
 
       <div className="text-lg">{comment.body}</div>
@@ -47,6 +67,12 @@ const Comment: React.FC<CommentProps> = ({
                 key={reply.id}
                 replies={[]}
                 currentUserId={currentUserId}
+                deleteComment={deleteComment}
+                addComment={addComment}
+                activeComment={activeComment}
+                setActiveComment={setActiveComment}
+                updateComment={updateComment}
+                parent_id={comment.id}
               />
             ))}
           </div>

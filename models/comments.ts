@@ -1,5 +1,5 @@
 export interface Comments {
-  id: string
+  id: number
   user_id: number
   body: string
   user_name: string
