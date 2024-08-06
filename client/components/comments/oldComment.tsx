@@ -1,20 +1,22 @@
-import { Comments } from '../../../models/comments'
-import CommentForm from './CommentForm'
+import { text } from 'express'
+import { CommentData } from './oldComments'
+import CommentForm from './oldCommentForm'
 
-interface ActiveComment {
-  id: string
-  type: 'replying' | 'editing'
-}
 interface CommentProps {
-  comment: Comments
-  replies: Comments[]
+  comment: CommentData
+  replies: CommentData[]
   currentUserId: string
   deleteComment: (commentId: string) => void
   activeComment: ActiveComment | null
   setActiveComment: (comment: ActiveComment | null) => void
   updateComment: (commentId: string) => void
-  addComment: (text: string, parent_id: string | null) => void
-  parent_id?: string | null
+  addComment: (text: string, parentId: string | null) => void
+  parentId?: string | null
+}
+
+interface ActiveComment {
+  id: string
+  type: 'replying' | 'editing'
 }
 const Comment: React.FC<CommentProps> = ({
   comment,
@@ -25,13 +27,13 @@ const Comment: React.FC<CommentProps> = ({
   addComment,
   activeComment,
   setActiveComment,
-  parent_id = null,
+  parentId = null,
 }) => {
   const canReply = Boolean(currentUserId)
-  const canEdit = currentUserId === comment.user_id
-  const canDelete = currentUserId === comment.user_id
-  const replyId = parent_id ? parent_id : comment.id
-  const createAt = new Date(comment.created_at).toLocaleString()
+  const canEdit = currentUserId === comment.userId
+  const canDelete = currentUserId === comment.userId
+  const replyId = parentId ? parentId : comment.id
+  const createAt = new Date(comment.createdAt).toLocaleString()
 
   const isReplying =
     activeComment &&
@@ -42,6 +44,7 @@ const Comment: React.FC<CommentProps> = ({
     activeComment &&
     activeComment.id === comment.id &&
     activeComment.type === 'editing'
+
   return (
     <>
       <div key={comment.id}>
@@ -49,7 +52,7 @@ const Comment: React.FC<CommentProps> = ({
           <img src="./user.png" alt="user" />
         </div>
         <div className="commentcontent">
-          <div className="text-lg text-blue-600">{comment.user_name}</div>
+          <div className="text-lg text-blue-600">{comment.username}</div>
           <div className="text-xs text-gray-600">{createAt}</div>
         </div>
         {!isEditing && <div className="text-md">{comment.body}</div>}
@@ -58,7 +61,7 @@ const Comment: React.FC<CommentProps> = ({
             submitLabel="Update"
             hasCancelButton
             initialValue={comment.body}
-            handleSubmit={(text: string) => updateComment(text, comment.id)}
+            handleSubmit={(text) => updateComment(text, comment.id)}
             handleCancel={() => setActiveComment(null)}
           />
         )}
@@ -89,29 +92,25 @@ const Comment: React.FC<CommentProps> = ({
           <CommentForm
             submitLabel="Reply"
             handleSubmit={(text) => addComment(text, replyId)}
-            hasCancelButton={false}
-            handleCancel={function (): void {
-              throw new Error('Function not implemented.')
-            }}
           />
         )}
         {/* {isEditing && (
-        <CommentForm
-          submitLabel="Save"
-          handleSubmit={(text) => {
-            updateCommentApi(comment.id, text)
-              .then(() => {
-                // Handle successful update
-                setActiveComment(null)
-              })
-              .catch((error) => {
-                console.error('Failed to update comment', error)
-              })
-          }}
-          parent_id={null}
-          initialValue={comment.body}
-        />
-      )} */}
+          <CommentForm
+            submitLabel="Save"
+            handleSubmit={(text) => {
+              updateCommentApi(comment.id, text)
+                .then(() => {
+                  // Handle successful update
+                  setActiveComment(null)
+                })
+                .catch((error) => {
+                  console.error('Failed to update comment', error)
+                })
+            }}
+            parentId={null}
+            initialValue={comment.body}
+          />
+        )} */}
         {replies.length > 0 && (
           <div style={{ marginLeft: '20px' }}>
             {' '}
@@ -126,7 +125,7 @@ const Comment: React.FC<CommentProps> = ({
                 activeComment={activeComment}
                 setActiveComment={setActiveComment}
                 updateComment={updateComment}
-                parent_id={comment.id}
+                parentId={comment.id}
               />
             ))}
           </div>
@@ -135,3 +134,5 @@ const Comment: React.FC<CommentProps> = ({
     </>
   )
 }
+
+export default Comment

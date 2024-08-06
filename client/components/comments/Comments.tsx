@@ -1,48 +1,32 @@
 import { useEffect, useState } from 'react'
 import {
-  getComments as getCommentsApi,
-  createComment as createCommentApi,
-  deleteComment as deleteCommentApi,
-  updateComment as updateCommentApi,
-} from '../../../server/dummy data/api'
+  Comments as CommentsInt,
+  NewCommentsData,
+} from '../../../models/comments'
+import {
+  getAllComments,
+  addComment as addCommentApi,
+} from '../../apis/comments'
 import Comment from './Comment'
-import CommentForm from './oldCommentForm'
+import CommentForm from './CommentForm'
 
-interface CommentsProps {
-  currentUserId: string
-}
-export interface CommentData {
-  id: string
-  body: string
-  username: string
-  userId: string
-  parentId: string | null
-  createdAt: string
-}
-interface ActiveComment {
-  id: string
-  type: 'replying' | 'editing'
-}
-
-export default function Comments({ currentUserId }: CommentsProps) {
-  const [backendComments, setBackendComments] = useState<CommentData[]>([])
+const Comments = () => {
+  const [backendComments, setBackendComments] = useState<CommentsInt[]>([])
   const [activeComment, setActiveComment] = useState<ActiveComment | null>(null)
-
   const rootComments = backendComments.filter(
-    (backendComment) => backendComment.parentId === null,
+    (backendComment) => backendComment.parent_id === null,
   )
-  function getReplies(commendId: string): CommentData[] {
+  function getReplies(commentId: string): CommentsInt[] {
     return backendComments
-      .filter((backendComment) => backendComment.parentId === commendId)
+      .filter((backendComment) => backendComment.parent_id === commentId)
       .sort(
         (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
       )
   }
-  const addComment = (text: string, parentId: string | null) => {
-    console.log(text, parentId)
-    createCommentApi(text, parentId)
-      .then((comment: CommentData) => {
+  const addComment = (text: string, parent_id: number | null) => {
+    addCommentApi(text, parent_id)
+      .then((comment: CommentsInt) => {
         setBackendComments([comment, ...backendComments])
         setActiveComment(null)
       })
@@ -50,44 +34,10 @@ export default function Comments({ currentUserId }: CommentsProps) {
         console.log('Failed to add comment', error)
       })
   }
-  const updateComment = (text: string, commentId: string) => {
-    updateCommentApi(text, commentId)
-      .then(() => {
-        const updatedBackendComments = backendComments.map((backendComment) =>
-          backendComment.id === commentId
-            ? { ...backendComment, body: text }
-            : backendComment,
-        )
-        setBackendComments(updatedBackendComments)
-        setActiveComment(null)
-      })
-      .catch((error) => {
-        console.error('Failed to update comment', error)
-      })
-  }
-
-  const deleteComment = (commentId: string) => {
-    if (window.confirm('Are you sure?')) {
-      deleteCommentApi(commentId)
-        .then(() => {
-          // Filter out the deleted comment from the state
-          const updatedBackendComments = backendComments.filter(
-            (backendComment) => backendComment.id !== commentId,
-          )
-          // Update the state with the new comments list
-          setBackendComments(updatedBackendComments)
-        })
-        .catch((error) => {
-          // Handle the error properly
-          console.error('Failed to delete comment', error)
-        })
-    }
-  }
-
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const data = await getCommentsApi()
+        const data = await getAllComments()
         setBackendComments(data)
       } catch (error) {
         console.error('Failed to fetch comments', error)
@@ -97,31 +47,33 @@ export default function Comments({ currentUserId }: CommentsProps) {
   }, [])
 
   return (
-    <>
-      <div>
-        <h3>Comments</h3>
-        <div>Write Comment</div>
-        <CommentForm
-          submitLabel="Write"
-          handleSubmit={(text) => addComment(text, null)}
-          parentId={null}
-        />
-        <div>
-          {rootComments.map((rootComment) => (
+    <div>
+      <h3>Comments</h3>
+      <div>Write Comment</div>
+      <CommentForm
+        submitLabel="Write"
+        handleSubmit={(text) => addComment(text, null)}
+        parent_id={null}
+        hasCancelButton={false}
+        handleCancel={function (): void {
+          throw new Error('Function not implemented.')
+        }}
+      />
+
+      <ul>
+        {rootComments.map((rootComment) => (
+          <>
+            <li key={rootComment.id}></li>
             <Comment
               key={rootComment.id}
               comment={rootComment}
               replies={getReplies(rootComment.id)}
-              currentUserId={currentUserId}
-              deleteComment={deleteComment}
-              activeComment={activeComment}
-              setActiveComment={setActiveComment}
-              addComment={addComment}
-              updateComment={updateComment}
             />
-          ))}
-        </div>
-      </div>
-    </>
+          </>
+        ))}
+      </ul>
+    </div>
   )
 }
+
+export default Comments

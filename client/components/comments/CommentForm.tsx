@@ -1,14 +1,14 @@
 import { FormEvent, useEffect, useState } from 'react'
-
 interface CommentFormProps {
   handleSubmit: (text: string) => void
   submitLabel: string
-  parentId?: string | null
+  parent_id?: string | null
   hasCancelButton: boolean
   handleCancel: () => void
   initialValue?: string
 }
-export default function newCommentForm({
+
+export default function CommentForm({
   handleSubmit,
   submitLabel,
   hasCancelButton = false,
@@ -22,7 +22,6 @@ export default function newCommentForm({
   useEffect(() => {
     setText(initialValue)
   }, [initialValue])
-
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     handleSubmit(text)

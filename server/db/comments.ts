@@ -31,7 +31,7 @@ export async function getAllComments() {
       'comments.parent_id as parent_id',
       'comments.created_at as created_at',
     )
-  // .orderBy('comments.id', 'asc') // Optional: sort by comment ID if needed
+  // .orderBy('comments.created_at', 'desc')
   return commentsWithReplies as Comments[]
 }
 
