@@ -9,14 +9,20 @@ import {
 } from '../../apis/comments'
 import Comment from './Comment'
 import CommentForm from './CommentForm'
-
-const Comments = () => {
+interface CommentsProps {
+  currentUserId: number
+}
+interface ActiveComment {
+  id: number
+  type: 'replying' | 'editing'
+}
+export default function Comments({ currentUserId }: CommentsProps) {
   const [backendComments, setBackendComments] = useState<CommentsInt[]>([])
   const [activeComment, setActiveComment] = useState<ActiveComment | null>(null)
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parent_id === null,
   )
-  function getReplies(commentId: string): CommentsInt[] {
+  function getReplies(commentId: number): CommentsInt[] {
     return backendComments
       .filter((backendComment) => backendComment.parent_id === commentId)
       .sort(
@@ -68,6 +74,7 @@ const Comments = () => {
               key={rootComment.id}
               comment={rootComment}
               replies={getReplies(rootComment.id)}
+              currentUserId={currentUserId}
             />
           </>
         ))}
@@ -75,5 +82,3 @@ const Comments = () => {
     </div>
   )
 }
-
-export default Comments

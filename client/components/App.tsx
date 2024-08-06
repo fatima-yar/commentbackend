@@ -11,7 +11,7 @@ function App() {
         <h1 className="text-3xl font-bold underline">
           Fullstack Boilerplate - with Fruits!
         </h1>
-        <Comments currentUserId="1" />
+        <Comments currentUserId={1} />
         {/* <AddComments /> */}
       </div>
     </>

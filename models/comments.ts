@@ -1,10 +1,10 @@
 export interface Comments {
   id: string
-  user_id: string
+  user_id: number
   body: string
   user_name: string
   img_url: string
-  parent_id: string | null
+  parent_id: number | null
   created_at: string
 }
 export interface NewComment {

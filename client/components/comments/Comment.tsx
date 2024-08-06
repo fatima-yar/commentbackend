@@ -3,6 +3,8 @@ import { Comments as CommentsInt } from '../../../models/comments'
 interface CommentProps {
   comment: CommentsInt
   replies: CommentsInt[]
+  currentUserId: number
+  parent_id?: number | null
 }
 
 interface ActiveComment {
@@ -10,7 +12,16 @@ interface ActiveComment {
   type: 'replying' | 'editing'
 }
 
-const Comment: React.FC<CommentProps> = ({ comment, replies }) => {
+const Comment: React.FC<CommentProps> = ({
+  comment,
+  replies,
+  currentUserId,
+  parent_id = null,
+}) => {
+  const canReply = Boolean(currentUserId)
+  const canEdit = currentUserId === comment.user_id
+  const canDelete = currentUserId === comment.user_id
+
   return (
     <div className="pl-4 pt-8">
       <div className="flex gap-2">
@@ -21,9 +32,9 @@ const Comment: React.FC<CommentProps> = ({ comment, replies }) => {
 
       <div className="text-lg">{comment.body}</div>
       <div className="flex gap-2 text-sm text-gray-500">
-        <button>Reply</button>
-        <button>Edit</button>
-        <button>Delete</button>
+        {canReply && <button>Reply</button>}
+        {canEdit && <button>Edit</button>}
+        {canDelete && <button>Delete</button>}
       </div>
 
       <div className=" text-gray-600">
@@ -31,7 +42,12 @@ const Comment: React.FC<CommentProps> = ({ comment, replies }) => {
           <div style={{ marginLeft: '20px' }}>
             {' '}
             {replies.map((reply) => (
-              <Comment comment={reply} key={reply.id} replies={[]} />
+              <Comment
+                comment={reply}
+                key={reply.id}
+                replies={[]}
+                currentUserId={currentUserId}
+              />
             ))}
           </div>
         )}
