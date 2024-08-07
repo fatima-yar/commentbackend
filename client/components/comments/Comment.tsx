@@ -32,7 +32,7 @@ const Comment: React.FC<CommentProps> = ({
   const canReply = Boolean(currentUserId)
   const canEdit = currentUserId === comment.user_id
   const canDelete = currentUserId === comment.user_id
-  const replyId = parent_id ?? comment.id
+  const replyId = parent_id ? parent_id : comment.id
   const createAt = new Date(comment.created_at).toLocaleString()
   const isReplying =
     activeComment &&
@@ -80,9 +80,6 @@ const Comment: React.FC<CommentProps> = ({
           submitLabel="Reply"
           handleSubmit={(text: string) => addComment(text, replyId)}
           hasCancelButton={false}
-          handleCancel={function (): void {
-            throw new Error('Function not implemented.')
-          }}
         />
       )}
 

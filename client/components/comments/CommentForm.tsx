@@ -42,10 +42,15 @@ export default function CommentForm({
   useEffect(() => {
     setText(initialValue)
   }, [initialValue])
+  // const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault()
+  //   if (text.trim() === '') return
+  //   addCommentMutation.mutate(text)
+  //   setText('')
+  // }
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (text.trim() === '') return
-    addCommentMutation.mutate(text)
+    handleSubmit(text)
     setText('')
   }
   return (
