@@ -5,7 +5,7 @@ interface CommentProps {
   replies: CommentsInt[]
   currentUserId: number
   parent_id?: number | null
-  deleteComment: (commentId: string) => void
+  deleteComment: (commentId: number) => void
   activeComment: ActiveComment | null
   setActiveComment: (comment: ActiveComment | null) => void
   updateComment: (commentId: number) => void
@@ -13,7 +13,7 @@ interface CommentProps {
 }
 
 interface ActiveComment {
-  id: string
+  id: number
   type: 'replying' | 'editing'
 }
 
@@ -54,7 +54,9 @@ const Comment: React.FC<CommentProps> = ({
       <div className="flex gap-2 text-sm text-gray-500">
         {canReply && <button>Reply</button>}
         {canEdit && <button>Edit</button>}
-        {canDelete && <button>Delete</button>}
+        {canDelete && (
+          <button onClick={() => deleteComment(comment.id)}>Delete</button>
+        )}
       </div>
 
       <div className=" text-gray-600">

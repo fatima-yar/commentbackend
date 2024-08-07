@@ -1,5 +1,6 @@
 import request from 'superagent'
 import { Comments as CommentsInt } from '../../models/comments'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export interface AddComment {
   body: string
@@ -40,4 +41,40 @@ export async function addComment(
 
 export async function deleteComment(id: number) {
   await request.delete(`${rootUrl}/comments/${id}`)
+}
+//Add a comment
+// export function useAddComment() {
+//   const queryClient = useQueryClient()
+
+//   return useMutation({
+//     mutationFn: async (data: { body: string, parent_id: number | null }) => {
+//       const res = await request.post(rootUrl).send(data)
+//       return res.body.comment // Ensure this matches the backend response
+//     },
+//     onSuccess: (newComment: CommentsInt) => {
+//       // Invalidate queries to refresh the comments list after adding a new comment
+//       queryClient.invalidateQueries(['comments'])
+//     },
+//     onError: (error: any) => {
+//       console.error('Failed to add comment', error)
+//     }
+//   })
+// }
+// Delete a comment
+
+export function useDeleteComment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      await request.delete(`${rootUrl}/${id}`)
+    },
+    onSuccess: () => {
+      // Invalidate the specific query to refresh data after a successful deletion
+      queryClient.invalidateQueries({ queryKey: ['comments'] })
+    },
+    onError: (error: any) => {
+      console.error('Failed to delete comment', error)
+    },
+  })
 }

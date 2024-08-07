@@ -3,6 +3,7 @@ import { Comments as CommentsInt } from '../../../models/comments'
 import {
   getAllComments,
   addComment as addCommentApi,
+  useDeleteComment,
 } from '../../apis/comments'
 import Comment from './Comment'
 import CommentForm from './CommentForm'
@@ -23,6 +24,8 @@ export default function Comments({ currentUserId }: CommentsProps) {
     (backendComment) => backendComment.parent_id === null,
   )
 
+  const { mutate: deleteCommentApi } = useDeleteComment() // Use the hook here
+
   function getReplies(commentId: number): CommentsInt[] {
     return backendComments
       .filter((backendComment) => backendComment.parent_id === commentId)
@@ -42,7 +45,21 @@ export default function Comments({ currentUserId }: CommentsProps) {
         console.log('Failed to add comment', error)
       })
   }
-
+  const deleteComment = (commentId: number) => {
+    if (window.confirm('Are you sure?')) {
+      deleteCommentApi(commentId, {
+        onSuccess: () => {
+          const updatedBackendComments = backendComments.filter(
+            (backendComment) => backendComment.id !== commentId,
+          )
+          setBackendComments(updatedBackendComments)
+        },
+        onError: (error: unknown) => {
+          console.error('Failed to delete comment', error)
+        },
+      })
+    }
+  }
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -77,6 +94,10 @@ export default function Comments({ currentUserId }: CommentsProps) {
               comment={rootComment}
               replies={getReplies(rootComment.id)}
               currentUserId={currentUserId}
+              deleteComment={deleteComment}
+              activeComment={activeComment}
+              setActiveComment={setActiveComment}
+              addComment={addComment}
             />
           </li>
         ))}
