@@ -7,6 +7,7 @@ import {
 } from '../../apis/comments'
 import Comment from './Comment'
 import CommentForm from './CommentForm'
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 
 interface CommentsProps {
   currentUserId: number
@@ -45,6 +46,24 @@ export default function Comments({ currentUserId }: CommentsProps) {
         console.log('Failed to add comment', error)
       })
   }
+  // const queryClient = useQueryClient()
+  // interface MutationProps {
+  //   post: string
+  //   parent_id: number | null
+  // }
+  // const addCommentMutation  = useMutation({
+  //   mutationFn: async (props:MutationProps)=>{
+
+  //     return addCommentApi (props.post, props.parent_id)
+
+  //   },
+  //   onSuccess:()=>{
+  //     queryClient.invalidateQueries({
+  //       queryKey:['comments']
+  //     })
+  //   }
+  // })
+
   const deleteComment = (commentId: number) => {
     if (window.confirm('Are you sure?')) {
       deleteCommentApi(commentId, {
@@ -71,8 +90,22 @@ export default function Comments({ currentUserId }: CommentsProps) {
     }
     fetchComments()
   }, [])
+  //   const [form, setForm] = useState('')
 
-  console.log(currentUserId)
+  // function handleSubmit(e: React.FormEvent<HTMLFormElement>){
+  // e.preventDefault()
+  // addCommentMutation.mutate(
+  //   { body: form,
+  //     parent_id
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       window.location.reload()
+  //     },
+  //   },
+  // )
+  // setForm('')
+  // }
 
   return (
     <div>

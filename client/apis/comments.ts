@@ -25,7 +25,7 @@ export async function getAllComments(): Promise<string[]> {
 export async function addComment(
   comment: string,
   parent_id: number | null = null,
-): Promise<CommentsInt> {
+) {
   const newComment = {
     body: comment,
     parent_id: parent_id,
@@ -33,9 +33,9 @@ export async function addComment(
 
     created_at: new Date().toISOString(),
   }
-
+  // await request.post(rootUrl).send(newComment)
   const res = await request.post(rootUrl).send(newComment)
-  return res.body.comment // Ensure your backend returns the new comment
+  return res.body.comment
   // .auth(token, { type: 'bearer' }) // Uncomment if authentication is needed
 }
 

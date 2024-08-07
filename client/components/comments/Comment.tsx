@@ -1,4 +1,5 @@
 import { Comments as CommentsInt } from '../../../models/comments'
+import CommentForm from './CommentForm'
 
 interface CommentProps {
   comment: CommentsInt
@@ -31,7 +32,7 @@ const Comment: React.FC<CommentProps> = ({
   const canReply = Boolean(currentUserId)
   const canEdit = currentUserId === comment.user_id
   const canDelete = currentUserId === comment.user_id
-  const replyId = parent_id ? parent_id : comment.id
+  const replyId = parent_id ?? comment.id
   const createAt = new Date(comment.created_at).toLocaleString()
   const isReplying =
     activeComment &&
@@ -43,7 +44,7 @@ const Comment: React.FC<CommentProps> = ({
     activeComment.id === comment.id &&
     activeComment.type === 'editing'
   return (
-    <div className="pl-4 pt-8">
+    <div className="pl-4 pt-8" key={comment.id}>
       <div className="flex gap-2">
         <img src={`./${comment.img_url}.png`} alt="icon" width="40px" />
         <div className="text-lg">{comment.user_name}</div>
@@ -52,12 +53,38 @@ const Comment: React.FC<CommentProps> = ({
 
       <div className="text-lg">{comment.body}</div>
       <div className="flex gap-2 text-sm text-gray-500">
-        {canReply && <button>Reply</button>}
-        {canEdit && <button>Edit</button>}
+        {canReply && (
+          <button
+            onClick={() =>
+              setActiveComment({ id: comment.id, type: 'replying' })
+            }
+          >
+            Reply
+          </button>
+        )}
+        {canEdit && (
+          <button
+            onClick={() =>
+              setActiveComment({ id: comment.id, type: 'editing' })
+            }
+          >
+            Edit
+          </button>
+        )}
         {canDelete && (
           <button onClick={() => deleteComment(comment.id)}>Delete</button>
         )}
       </div>
+      {isReplying && (
+        <CommentForm
+          submitLabel="Reply"
+          handleSubmit={(text: string) => addComment(text, replyId)}
+          hasCancelButton={false}
+          handleCancel={function (): void {
+            throw new Error('Function not implemented.')
+          }}
+        />
+      )}
 
       <div className=" text-gray-600">
         {replies.length > 0 && (
