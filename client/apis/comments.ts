@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 export interface AddComment {
   body: string
   parent_id: number | null
+  user_id: number
 }
 const rootUrl = '/api/v1/comments'
 
@@ -13,31 +14,55 @@ export async function getAllComments(): Promise<string[]> {
   return res.body.comments
 }
 
-// export async function addComment(comment: string, parent_id =null) {
-//   const newComment: AddComment = {
-//     body: comment,
-//     parent_id
-//   }
-//   await request.post(rootUrl + '/comments').send(newComment)
-//   // .auth(token, { type: 'bearer' })
-// }
-
 export async function addComment(
   comment: string,
-  parent_id: number | null = null,
+  parent_id = null,
+  user_id: number,
 ) {
-  const newComment = {
+  const newComment: AddComment = {
     body: comment,
-    parent_id: parent_id,
-    user_id: '3', // Default userId (if needed)
-
-    created_at: new Date().toISOString(),
+    parent_id,
+    user_id: user_id,
   }
-  // await request.post(rootUrl).send(newComment)
-  const res = await request.post(rootUrl).send(newComment)
-  return res.body.comment
-  // .auth(token, { type: 'bearer' }) // Uncomment if authentication is needed
+  await request.post(rootUrl + '/comments').send(newComment)
+  // .auth(token, { type: 'bearer' })
 }
+
+// Example API function
+// export async function addComment(
+//   body: string,
+//   parent_id: number | null,
+//   user_id: number,
+// ) {
+//   const response = await fetch('/api/comments', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ body, parent_id, user_id }),
+//   })
+//   if (!response.ok) {
+//     throw new Error('Network response was not ok.')
+//   }
+//   return response.json() // Adjust this based on your API response format
+// }
+
+// export async function addComment(
+//   comment: string,
+//   parent_id: number | null = null,
+// ) {
+//   const newComment = {
+//     body: comment,
+//     parent_id: parent_id,
+//     user_id: '3', // Default userId (if needed)
+
+//     created_at: new Date().toISOString(),
+//   }
+//   // await request.post(rootUrl).send(newComment)
+//   const res = await request.post(rootUrl).send(newComment)
+//   return res.body.comment
+//   // .auth(token, { type: 'bearer' }) // Uncomment if authentication is needed
+// }
 
 export async function deleteComment(id: number) {
   await request.delete(`${rootUrl}/comments/${id}`)

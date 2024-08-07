@@ -43,6 +43,10 @@ const Comment: React.FC<CommentProps> = ({
     activeComment &&
     activeComment.id === comment.id &&
     activeComment.type === 'editing'
+  const handleSubmit = (text: string) => {
+    addComment(text, replyId)
+    setActiveComment(null)
+  }
   return (
     <div className="pl-4 pt-8" key={comment.id}>
       <div className="flex gap-2">
@@ -77,9 +81,12 @@ const Comment: React.FC<CommentProps> = ({
       </div>
       {isReplying && (
         <CommentForm
-          submitLabel="Reply"
-          handleSubmit={(text: string) => addComment(text, replyId)}
+          submitLabel="Write"
+          handleSubmit={handleSubmit} // Ensure this is passed correctly
+          parent_id={null}
           hasCancelButton={false}
+          handleCancel={() => {}}
+          initialValue={form}
         />
       )}
 

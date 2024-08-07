@@ -21,38 +21,16 @@ export default function CommentForm({
   const [text, setText] = useState(initialValue)
   const isTextareaDisabled = text.length === 0
 
-  const queryClient = useQueryClient()
-
-  const addCommentMutation = useMutation({
-    mutationFn: async (body: string) => {
-      const parentId = parent_id ? Number(parent_id) : null
-      return addComment(body, parentId)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['comments'],
-      })
-      window.location.reload()
-    },
-    onError: (error) => {
-      console.error('Error adding comment:', error)
-    },
-  })
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (text.trim() === '') return
+    handleSubmit(text) // Pass the text to handleSubmit
+    setText('')
+  }
 
   useEffect(() => {
     setText(initialValue)
   }, [initialValue])
-  // const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault()
-  //   if (text.trim() === '') return
-  //   addCommentMutation.mutate(text)
-  //   setText('')
-  // }
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    handleSubmit(text)
-    setText('')
-  }
   return (
     <>
       <form onSubmit={onSubmit}>

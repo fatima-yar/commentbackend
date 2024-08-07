@@ -7,7 +7,7 @@ import {
 } from '../../apis/comments'
 import Comment from './Comment'
 import CommentForm from './CommentForm'
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 interface CommentsProps {
   currentUserId: number
@@ -17,52 +17,34 @@ interface ActiveComment {
   id: number
   type: 'replying' | 'editing'
 }
-
+interface MutationProps {
+  body: string
+  parent_id: number | null
+  user_id: number
+}
 export default function Comments({ currentUserId }: CommentsProps) {
   const [backendComments, setBackendComments] = useState<CommentsInt[]>([])
   const [activeComment, setActiveComment] = useState<ActiveComment | null>(null)
+  const [form, setForm] = useState('')
+
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parent_id === null,
   )
+  const queryClient = useQueryClient()
 
-  const { mutate: deleteCommentApi } = useDeleteComment() // Use the hook here
+  const { mutate: deleteCommentApi } = useDeleteComment()
 
-  function getReplies(commentId: number): CommentsInt[] {
-    return backendComments
-      .filter((backendComment) => backendComment.parent_id === commentId)
-      .sort(
-        (a, b) =>
-          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-      )
-  }
-
-  const addComment = (text: string, parent_id: number | null) => {
-    addCommentApi(text, parent_id)
-      .then((comment: CommentsInt) => {
-        setBackendComments([comment, ...backendComments])
-        setActiveComment(null)
-      })
-      .catch((error) => {
-        console.log('Failed to add comment', error)
-      })
-  }
-  // const queryClient = useQueryClient()
-  // interface MutationProps {
-  //   post: string
-  //   parent_id: number | null
-  // }
-  // const addCommentMutation  = useMutation({
-  //   mutationFn: async (props:MutationProps)=>{
-
-  //     return addCommentApi (props.post, props.parent_id)
-
-  //   },
-  //   onSuccess:()=>{
-  //     queryClient.invalidateQueries({
-  //       queryKey:['comments']
-  //     })
-  //   }
-  // })
+  const addCommentMutation = useMutation({
+    mutationFn: async (props: MutationProps) => {
+      return addCommentApi(props.body, props.parent_id, props.user_id)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['comments'])
+    },
+    onError: (error) => {
+      console.error('Failed to add comment', error)
+    },
+  })
 
   const deleteComment = (commentId: number) => {
     if (window.confirm('Are you sure?')) {
@@ -79,6 +61,34 @@ export default function Comments({ currentUserId }: CommentsProps) {
       })
     }
   }
+
+  function getReplies(commentId: number): CommentsInt[] {
+    return backendComments
+      .filter((backendComment) => backendComment.parent_id === commentId)
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      )
+  }
+
+  // const addComment = (text: string, parent_id: number | null) => {
+  //   addCommentApi(text, parent_id)
+  //     .then((comment: CommentsInt) => {
+  //       setBackendComments([comment, ...backendComments])
+  //       setActiveComment(null)
+  //     })
+  //     .catch((error) => {
+  //       console.log('Failed to add comment', error)
+  //     })
+  // }
+  const handleSubmit = (text: string) => {
+    addCommentMutation.mutate({
+      body: text,
+      parent_id: null, // Or set this based on the context
+      user_id: currentUserId,
+    })
+  }
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -90,22 +100,8 @@ export default function Comments({ currentUserId }: CommentsProps) {
     }
     fetchComments()
   }, [])
-  //   const [form, setForm] = useState('')
 
-  // function handleSubmit(e: React.FormEvent<HTMLFormElement>){
-  // e.preventDefault()
-  // addCommentMutation.mutate(
-  //   { body: form,
-  //     parent_id
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       window.location.reload()
-  //     },
-  //   },
-  // )
-  // setForm('')
-  // }
+  //     window.location.reload()
 
   return (
     <div>
@@ -113,12 +109,11 @@ export default function Comments({ currentUserId }: CommentsProps) {
       <div>Write Comment</div>
       <CommentForm
         submitLabel="Write"
-        handleSubmit={(text) => addComment(text, null)}
+        handleSubmit={handleSubmit} // Pass the function here
         parent_id={null}
         hasCancelButton={false}
-        handleCancel={() => {
-          throw new Error('Function not implemented.')
-        }}
+        handleCancel={() => {}}
+        initialValue={form} // If you want to use form state
       />
       <ul>
         {rootComments.map((rootComment) => (
@@ -130,7 +125,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
               deleteComment={deleteComment}
               activeComment={activeComment}
               setActiveComment={setActiveComment}
-              addComment={addComment}
+              addComment={handleSubmit} // Correct function usage here
             />
           </li>
         ))}
