@@ -23,21 +23,21 @@ export default function CommentForm({
 
   const queryClient = useQueryClient()
 
-  const addCommentMutation = useMutation({
-    mutationFn: async (body: string) => {
-      const parentId = parent_id ? Number(parent_id) : null
-      return addComment(body, parentId)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['comments'],
-      })
-      window.location.reload()
-    },
-    onError: (error) => {
-      console.error('Error adding comment:', error)
-    },
-  })
+  // const addCommentMutation = useMutation({
+  //   mutationFn: async (body: string) => {
+  //     const parentId = parent_id ? Number(parent_id) : null
+  //     return addComment(body, parentId)
+  //   },
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({
+  //       queryKey: ['comments'],
+  //     })
+  //     window.location.reload()
+  //   },
+  //   onError: (error) => {
+  //     console.error('Error adding comment:', error)
+  //   },
+  // })
 
   useEffect(() => {
     setText(initialValue)

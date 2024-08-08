@@ -9,7 +9,7 @@ interface CommentProps {
   deleteComment: (commentId: number) => void
   activeComment: ActiveComment | null
   setActiveComment: (comment: ActiveComment | null) => void
-  updateComment: (commentId: number) => void
+  updateComment: (commentId: number, text: string) => void
   addComment: (text: string, parent_id: number | null) => void
 }
 
@@ -51,7 +51,16 @@ const Comment: React.FC<CommentProps> = ({
         <div className="pt-2 text-xs ">{createAt}</div>
       </div>
 
-      <div className="text-lg">{comment.body}</div>
+      {!isEditing && <div className="text-lg">{comment.body}</div>}
+      {isEditing && (
+        <CommentForm
+          submitLabel="Update"
+          hasCancelButton
+          initialValue={comment.body}
+          handleSubmit={(text) => updateComment(comment.id, text)}
+          handleCancel={() => setActiveComment(null)}
+        />
+      )}
       <div className="flex gap-2 text-sm text-gray-500">
         {canReply && (
           <button

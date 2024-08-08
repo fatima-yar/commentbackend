@@ -4,11 +4,12 @@ import {
   getAllComments,
   addComment as addCommentApi,
   useDeleteComment,
+  useUpdateComment,
 } from '../../apis/comments'
 import Comment from './Comment'
 import CommentForm from './CommentForm'
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
-
+import { updateComment } from '../../../server/db/comments'
 interface CommentsProps {
   currentUserId: number
 }
@@ -26,6 +27,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
   )
 
   const { mutate: deleteCommentApi } = useDeleteComment() // Use the hook here
+  const { mutate: updateCommentApi } = useUpdateComment()
 
   function getReplies(commentId: number): CommentsInt[] {
     return backendComments
@@ -79,6 +81,27 @@ export default function Comments({ currentUserId }: CommentsProps) {
       })
     }
   }
+  const updateComment = (id: number, body: string) => {
+    console.log('Component:', body)
+    // updateCommentApi(
+    //   { id, body, user_id: currentUserId },
+    //   {
+    //     onSuccess: () => {
+    //       setBackendComments((prevComments) =>
+    //         prevComments.map((comment) =>
+    //           comment.id === id ? { ...comment, body } : comment,
+    //         ),
+    //       )
+    //       setActiveComment(null)
+    //     },
+    //     onError: (error: unknown) => {
+    //       console.error('Failed to update comment', error)
+    //     },
+    //   },
+    // )
+    updateCommentApi({ id, body })
+  }
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -131,6 +154,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
               activeComment={activeComment}
               setActiveComment={setActiveComment}
               addComment={addComment}
+              updateComment={updateComment}
             />
           </li>
         ))}

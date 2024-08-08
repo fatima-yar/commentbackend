@@ -6,6 +6,11 @@ export interface AddComment {
   body: string
   parent_id: number | null
 }
+export interface updateComment {
+  id: number
+  body: string
+  user_id: number
+}
 const rootUrl = '/api/v1/comments'
 
 export async function getAllComments(): Promise<string[]> {
@@ -33,8 +38,10 @@ export async function addComment(
 
     created_at: new Date().toISOString(),
   }
+
   // await request.post(rootUrl).send(newComment)
   const res = await request.post(rootUrl).send(newComment)
+
   return res.body.comment
   // .auth(token, { type: 'bearer' }) // Uncomment if authentication is needed
 }
@@ -42,6 +49,7 @@ export async function addComment(
 export async function deleteComment(id: number) {
   await request.delete(`${rootUrl}/comments/${id}`)
 }
+
 //Add a comment
 // export function useAddComment() {
 //   const queryClient = useQueryClient()
@@ -75,6 +83,25 @@ export function useDeleteComment() {
     },
     onError: (error: any) => {
       console.error('Failed to delete comment', error)
+    },
+  })
+}
+
+export function useUpdateComment() {
+  const queryClient = useQueryClient()
+  interface Props {
+    id: number
+    body: string
+  }
+  return useMutation({
+    mutationFn: async (data: Props) => {
+      const { id, body } = data
+      console.log('Api body:', body)
+      console.log('Api id:', id)
+      await request.patch(`${rootUrl}/${id}`).send({ body })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments'] })
     },
   })
 }

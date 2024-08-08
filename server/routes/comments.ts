@@ -46,17 +46,33 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
+// router.patch('/:id', async (req, res) => {
+//   try {
+//     const id = Number(req.params.id)
+//     const updatedComment = req.body
+//     console.log(updatedComment)
+//     await db.updateComment(id, updatedComment)
+//     res.sendStatus(200)
+//   } catch (error) {
+//     console.error(`database error: ${error}`)
+//     res.sendStatus(500)
+//   }
+// })
+
 router.patch('/:id', async (req, res) => {
   try {
     const id = Number(req.params.id)
-    const updatedComment = req.body
-    console.log(updatedComment)
+    const updatedComment = req.body.body
+    console.log('Updating comment with ID:', id)
+    console.log('Update data:', updatedComment)
+
+    // Ensure your `db.updateComment` function correctly handles the update
     await db.updateComment(id, updatedComment)
+
     res.sendStatus(200)
   } catch (error) {
-    console.error(`database error: ${error}`)
+    console.error(`Database error: ${error}`)
     res.sendStatus(500)
   }
 })
-
 export default router

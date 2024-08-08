@@ -52,5 +52,5 @@ export async function deleteComment(id: number) {
 }
 
 export async function updateComment(id: number, body: Record<string, any>) {
-  return db('comments').where({ id }).update(body)
+  return db('comments').where({ id }).update({ body })
 }
