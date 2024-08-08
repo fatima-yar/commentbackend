@@ -11,6 +11,7 @@ interface CommentProps {
   setActiveComment: (comment: ActiveComment | null) => void
   updateComment: (commentId: number, text: string) => void
   addComment: (text: string, parent_id: number | null) => void
+  setBackendComments: React.Dispatch<React.SetStateAction<CommentsInt[]>>
 }
 
 interface ActiveComment {
@@ -28,6 +29,7 @@ const Comment: React.FC<CommentProps> = ({
   addComment,
   activeComment,
   setActiveComment,
+  setBackendComments,
 }) => {
   const canReply = Boolean(currentUserId)
   const canEdit = currentUserId === comment.user_id
@@ -108,6 +110,7 @@ const Comment: React.FC<CommentProps> = ({
                 setActiveComment={setActiveComment}
                 updateComment={updateComment}
                 parent_id={comment.id}
+                setBackendComments={setBackendComments}
               />
             ))}
           </div>

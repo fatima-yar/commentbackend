@@ -45,6 +45,24 @@ export async function addComment(
   return res.body.comment
   // .auth(token, { type: 'bearer' }) // Uncomment if authentication is needed
 }
+export function useComments(
+  id: number,
+  body: string,
+
+  setComments: React.Dispatch<React.SetStateAction<CommentsInt[]>>,
+) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (c: CommentsInt) => await addComment(c),
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['comments'] })
+      const events = await getAllComments(id, date)
+      setEvents(events)
+    },
+  })
+}
 
 export async function deleteComment(id: number) {
   await request.delete(`${rootUrl}/comments/${id}`)
@@ -86,22 +104,28 @@ export function useDeleteComment() {
     },
   })
 }
-
-export function useUpdateComment() {
+interface Props {
+  id: number
+  body: string
+}
+export function useUpdateComment(
+  id: number,
+  body: string,
+  setBackendComments: React.Dispatch<React.SetStateAction<CommentsInt[]>>,
+) {
   const queryClient = useQueryClient()
-  interface Props {
-    id: number
-    body: string
-  }
+
   return useMutation({
-    mutationFn: async (data: Props) => {
-      const { id, body } = data
+    mutationFn: async ({ id, body }: Props) => {
+      // const { id, body } = data
       console.log('Api body:', body)
       console.log('Api id:', id)
       await request.patch(`${rootUrl}/${id}`).send({ body })
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['comments'] })
+      const data = await getAllComments()
+      setBackendComments(data)
     },
   })
 }

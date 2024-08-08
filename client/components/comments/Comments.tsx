@@ -27,7 +27,11 @@ export default function Comments({ currentUserId }: CommentsProps) {
   )
 
   const { mutate: deleteCommentApi } = useDeleteComment() // Use the hook here
-  const { mutate: updateCommentApi } = useUpdateComment()
+  const { mutate: updateCommentApi } = useUpdateComment(
+    id,
+    body,
+    setBackendComments,
+  )
 
   function getReplies(commentId: number): CommentsInt[] {
     return backendComments
@@ -155,6 +159,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
               setActiveComment={setActiveComment}
               addComment={addComment}
               updateComment={updateComment}
+              setBackendComments={setBackendComments}
             />
           </li>
         ))}
