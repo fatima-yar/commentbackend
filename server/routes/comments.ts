@@ -27,13 +27,12 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res) => {
   try {
     const newComment = req.body
-    const insertedComment = await db.addComment(newComment) // Insert and retrieve comment
-    // await db.addComment(newComment)
+    const insertedComment = await db.addComment(newComment)
+
     res.status(201).json(insertedComment) // Send response
   } catch (error) {
     console.error(`database error: ${error}`)
     if (!res.headersSent) {
-      // Check if response is already sent
       res.status(500).send('Internal Server Error')
     }
   }
@@ -50,19 +49,6 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
-// router.patch('/:id', async (req, res) => {
-//   try {
-//     const id = Number(req.params.id)
-//     const updatedComment = req.body
-//     console.log(updatedComment)
-//     await db.updateComment(id, updatedComment)
-//     res.sendStatus(200)
-//   } catch (error) {
-//     console.error(`database error: ${error}`)
-//     res.sendStatus(500)
-//   }
-// })
-
 router.patch('/:id', async (req, res) => {
   try {
     const id = Number(req.params.id)
@@ -70,7 +56,6 @@ router.patch('/:id', async (req, res) => {
     console.log('Updating comment with ID:', id)
     console.log('Update data:', updatedComment)
 
-    // Ensure your `db.updateComment` function correctly handles the update
     await db.updateComment(id, updatedComment)
 
     res.sendStatus(200)
