@@ -29,10 +29,35 @@ export async function getAllComments() {
   return commentsWithReplies as Comments[]
 }
 
+// export async function addComment(newComment: NewCommentData) {
+//   const [id] = await db('comments').insert(newComment)
+//   const insertedComment = await db('comments').where({ id }).first()
+//   console.log('insertedComment:', insertedComment)
+//   return insertedComment
+// }
+
 export async function addComment(newComment: NewCommentData) {
+  // Insert the new comment and get its ID
   const [id] = await db('comments').insert(newComment)
-  const insertedComment = await db('comments').where({ id }).first()
+
+  // Fetch the inserted comment along with user information
+  const insertedComment = await db('comments')
+    .join('users', 'users.id', 'comments.user_id')
+    .select(
+      'comments.id as id',
+      'comments.user_id as user_id',
+      'comments.body as body',
+      'users.user_name as user_name',
+      'users.img_url as img_url',
+      'comments.parent_id as parent_id',
+      'comments.created_at as created_at',
+    )
+    .where('comments.id', id)
+    .first()
+
+  // Log the inserted comment with user information
   console.log('insertedComment:', insertedComment)
+
   return insertedComment
 }
 

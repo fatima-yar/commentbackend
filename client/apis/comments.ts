@@ -35,38 +35,18 @@ export async function addComment(
   const newComment = {
     body: comment,
     parent_id: parent_id,
-    user_id: 3, // Default userId (if needed)
+    user_id: 3,
     created_at: new Date().toISOString(),
   }
 
   const res = await request.post(rootUrl).send(newComment)
   console.log('res.body:', res.body)
-  return res.body // Ensure this contains the full comment object
+  return res.body
 }
 
 export async function deleteComment(id: number) {
   await request.delete(`${rootUrl}/comments/${id}`)
 }
-
-//Add a comment
-// export function useAddComment() {
-//   const queryClient = useQueryClient()
-
-//   return useMutation({
-//     mutationFn: async (data: { body: string, parent_id: number | null }) => {
-//       const res = await request.post(rootUrl).send(data)
-//       return res.body.comment // Ensure this matches the backend response
-//     },
-//     onSuccess: (newComment: CommentsInt) => {
-//       // Invalidate queries to refresh the comments list after adding a new comment
-//       queryClient.invalidateQueries(['comments'])
-//     },
-//     onError: (error: any) => {
-//       console.error('Failed to add comment', error)
-//     }
-//   })
-// }
-// Delete a comment
 
 export function useDeleteComment() {
   const queryClient = useQueryClient()
