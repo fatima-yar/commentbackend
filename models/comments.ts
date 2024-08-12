@@ -19,4 +19,5 @@ export interface NewComment {
 
 export type CommentData = Omit<Comments, 'comments' | 'timestamp'>
 
-export type NewCommentsData = Omit<NewComment, 'comments' | 'timestamp'>
+// export type NewCommentData = Omit<NewComment, 'comments' | 'timestamp'>
+export type NewCommentData = Omit<Comments, 'id'>
