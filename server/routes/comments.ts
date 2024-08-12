@@ -27,11 +27,15 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res) => {
   try {
     const newComment = req.body
-    await db.addComment(newComment)
-    res.sendStatus(201)
+    const insertedComment = await db.addComment(newComment) // Insert and retrieve comment
+    // await db.addComment(newComment)
+    res.status(201).json(insertedComment) // Send response
   } catch (error) {
     console.error(`database error: ${error}`)
-    res.sendStatus(500)
+    if (!res.headersSent) {
+      // Check if response is already sent
+      res.status(500).send('Internal Server Error')
+    }
   }
 })
 

@@ -41,13 +41,19 @@ export default function Comments({ currentUserId }: CommentsProps) {
   const addComment = (text: string, parent_id: number | null) => {
     addCommentApi(text, parent_id)
       .then((comment: CommentsInt) => {
-        setBackendComments([comment, ...backendComments])
-        setActiveComment(null)
+        if (comment) {
+          // Ensure comment is not null
+          setBackendComments([comment, ...backendComments])
+          setActiveComment(null)
+        } else {
+          console.error('Received null comment from API')
+        }
       })
       .catch((error) => {
         console.log('Failed to add comment', error)
       })
   }
+
   // const queryClient = useQueryClient()
   // interface MutationProps {
   //   post: string

@@ -31,21 +31,17 @@ export async function addComment(
   comment: string,
   parent_id: number | null = null,
 ) {
+  console.log('Api:', comment)
   const newComment = {
     body: comment,
     parent_id: parent_id,
     user_id: 3, // Default userId (if needed)
-
     created_at: new Date().toISOString(),
   }
 
-  // await request.post(rootUrl).send(newComment)
   const res = await request.post(rootUrl).send(newComment)
-
   console.log('res.body:', res.body)
-  console.log('res.body.comment:', res.body.comment)
-  return res.body.comment
-  // .auth(token, { type: 'bearer' }) // Uncomment if authentication is needed
+  return res.body // Ensure this contains the full comment object
 }
 
 export async function deleteComment(id: number) {
