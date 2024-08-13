@@ -6,7 +6,7 @@ export interface AddComment {
   body: string
   parent_id: number | null
 }
-export interface updateComment {
+export interface UpdateComment {
   id: number
   body: string
   user_id: number
@@ -35,7 +35,7 @@ export async function addComment(
   const newComment = {
     body: comment,
     parent_id: parent_id,
-    user_id: 3,
+    user_id: 1,
     created_at: new Date().toISOString(),
   }
 
@@ -67,19 +67,35 @@ export function useDeleteComment() {
 
 export function useUpdateComment() {
   const queryClient = useQueryClient()
-  interface Props {
-    id: number
-    body: string
-  }
+
   return useMutation({
-    mutationFn: async (data: Props) => {
-      const { id, body } = data
-      console.log('Api body:', body)
-      console.log('Api id:', id)
-      await request.patch(`${rootUrl}/${id}`).send({ body })
+    mutationFn: async (data: UpdateComment) => {
+      const { id, body, user_id } = data
+      await request.patch(`${rootUrl}/${id}`).send({ body, user_id })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments'] })
     },
+    onError: (error) => {
+      console.error('Failed to update comment', error)
+    },
   })
 }
+// export function useUpdateComment() {
+//   const queryClient = useQueryClient()
+//   interface Props {
+//     id: number
+//     body: string
+//   }
+//   return useMutation({
+//     mutationFn: async (data: Props) => {
+//       const { id, body } = data
+//       console.log('Api body:', body)
+//       console.log('Api id:', id)
+//       await request.patch(${rootUrl}/${id}).send({ body })
+//     },
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ['comments'] })
+//     },
+//   })
+// }

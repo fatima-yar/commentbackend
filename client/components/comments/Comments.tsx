@@ -87,25 +87,28 @@ export default function Comments({ currentUserId }: CommentsProps) {
       })
     }
   }
+  // const updateComment = (id: number, body: string) => {
+  //   console.log('Component:', body)
+  //   updateCommentApi({ id, body })
+  // }
   const updateComment = (id: number, body: string) => {
-    console.log('Component:', body)
-    // updateCommentApi(
-    //   { id, body, user_id: currentUserId },
-    //   {
-    //     onSuccess: () => {
-    //       setBackendComments((prevComments) =>
-    //         prevComments.map((comment) =>
-    //           comment.id === id ? { ...comment, body } : comment,
-    //         ),
-    //       )
-    //       setActiveComment(null)
-    //     },
-    //     onError: (error: unknown) => {
-    //       console.error('Failed to update comment', error)
-    //     },
-    //   },
-    // )
-    updateCommentApi({ id, body })
+    updateCommentApi(
+      { id, body, user_id: currentUserId },
+      {
+        onSuccess: () => {
+          // Update the local state to reflect the changes
+          setBackendComments((prevComments) =>
+            prevComments.map((comment) =>
+              comment.id === id ? { ...comment, body } : comment,
+            ),
+          )
+          setActiveComment(null)
+        },
+        onError: (error) => {
+          console.error('Failed to update comment', error)
+        },
+      },
+    )
   }
 
   useEffect(() => {
