@@ -32,12 +32,12 @@ export async function getAllPosts() {
   const allPosts = await db('posts').select('posts.id', 'posts.content')
   return allPosts as Post[]
 }
-export async function getPostById(id: number) {
+export async function getPostById(id: number | string) {
   const post = await db('posts').select().first().where({ id })
   return post as Post[]
 }
 
-export async function getCommentsByPostId(postId: number) {
+export async function getCommentsByPostId(post_id: number) {
   const commentsByPostId = await db('comments')
     .join('users', 'users.id', 'comments.user_id')
     .join('posts', 'posts.id', 'comments.post_id')
@@ -52,7 +52,7 @@ export async function getCommentsByPostId(postId: number) {
       'comments.post_id as post_id',
     )
     .first()
-    .where('comments.post_id', { postId })
+    .where({ post_id })
   return commentsByPostId as Comments[]
 }
 
