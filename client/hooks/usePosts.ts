@@ -1,35 +1,14 @@
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  MutationFunction,
-} from '@tanstack/react-query'
-import { getFruits } from '../apis/fruits.ts'
-import { getPosts } from '../apis/posts.ts'
+import { useQuery } from '@tanstack/react-query'
+import { getPosts } from '../apis/posts'
+import { Post } from '../../models/post' // Ensure this path is correct
 
 export function usePosts() {
-  const query = useQuery({ queryKey: ['posts'], queryFn: getPosts })
-  return {
-    ...query,
-    // Extra queries go here e.g. addFruit: useAddFruit()
-  }
-}
-
-export function usePostsMutation<TData = unknown, TVariables = unknown>(
-  mutationFn: MutationFunction<TData, TVariables>,
-) {
-  const queryClient = useQueryClient()
-  const mutation = useMutation({
-    mutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] })
-    },
+  const query = useQuery<Post[]>({
+    queryKey: ['posts'],
+    queryFn: getPosts,
   })
 
-  return mutation
+  return {
+    ...query,
+  }
 }
-
-// Query functions go here e.g. useAddFruit
-/* function useAddFruit() {
-  return useFruitsMutation(addFruit)
-} */

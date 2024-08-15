@@ -9,9 +9,8 @@ function App() {
   return (
     <>
       <div className="app">
-        <Posts />
-        {/* <Comments currentUserId={1} />
-         */}
+        {/* <Posts /> */}
+        <Comments currentUserId={1} />
       </div>
     </>
   )

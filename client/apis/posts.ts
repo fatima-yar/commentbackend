@@ -1,9 +1,11 @@
 import request from 'superagent'
+import { Post } from '../../models/post' // Ensure this path is correct
 
 const rootUrl = '/api/v1'
 
-export function getPosts(): Promise<string[]> {
+export function getPosts(): Promise<Post[]> {
   return request.get(rootUrl + '/posts').then((res) => {
-    return res.body.posts
+    // Ensure the API response structure matches this expectation
+    return res.body.posts as Post[]
   })
 }
