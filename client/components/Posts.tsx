@@ -1,29 +1,8 @@
-// import { useState } from 'react'
-// import { usePosts } from '../hooks/usePosts'
-// import Comments from './comments/Comments'
-// import { Post } from '../../models/post'
-
-import { useFruits } from '../hooks/useFruits.ts'
-import AddComments from './comments/AddComments.tsx'
-import Comments from './comments/Comments.tsx'
-
-function App() {
-  const { data } = useFruits()
-
-  return (
-    <>
-      <div className="app">
-        <h1 className="text-3xl font-bold underline">
-          Fullstack Boilerplate - with Fruits!
-        </h1>
-        <Comments currentUserId={3} />
-        {/* <AddComments /> */}
-      </div>
-    </>
-  )
-}
-
-export default App
+import { useState } from 'react'
+import { usePosts } from '../hooks/usePosts'
+import Comments from './comments/Comments'
+import { Post } from '../../models/post'
+import postcss from 'postcss'
 
 // export default function Posts() {
 //   const { data } = usePosts()
@@ -54,28 +33,23 @@ export default App
 //   )
 // }
 
-// export default function Posts() {
-//   const { data } = usePosts()
-//   const [activeComment, setActiveComment]=useState(1)
-//   const selectHandler = (postId: number) => {
-//     setActiveComment(postId)
-//   }
-//   return (
-//     <>
-//       <div className="app">
-//         <h1>Fullstack Boilerplate - with posts!</h1>
-//         <ul>
-//           {data &&
-//             data.map((post) => (
-//               <li key={post}>
-//                 {post}
-//                 <Comments currentUserId={1} />
-//               </li>
-//             ))}
-//         </ul>
+export default function Posts() {
+  const { data, error, loading } = usePosts()
 
-//         {/* <Comments currentUserId={1} /> */}
-//       </div>
-//     </>
-//   )
-// }
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error loading posts: {error.message}</div>
+
+  return (
+    <div className="app">
+      <h1>Fullstack Boilerplate - with posts!</h1>
+      <ul>
+        {data &&
+          data.map((post) => (
+            <li key={post}>
+              {post} <Comments currentUserId={1} />
+            </li>
+          ))}
+      </ul>
+    </div>
+  )
+}
