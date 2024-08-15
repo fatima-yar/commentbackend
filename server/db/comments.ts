@@ -1,6 +1,7 @@
 import { comment } from 'postcss'
 import { Comments, NewComment, NewCommentData } from '../../models/comments'
 import db from '../db/connection'
+import { Post } from '../../models/post'
 
 export async function getCommentsById(id: number | string) {
   const comment = await db('comments').select().first().where({ id })
@@ -25,6 +26,34 @@ export async function getAllComments() {
 
   // .orderBy('comments.created_at', 'desc')
   return commentsWithReplies as Comments[]
+}
+
+export async function getAllPosts() {
+  const allPosts = await db('posts').select('posts.id', 'posts.content')
+  return allPosts as Post[]
+}
+export async function getPostById(id: number) {
+  const post = await db('posts').select().first().where({ id })
+  return post as Post[]
+}
+
+export async function getCommentsByPostId(postId: number) {
+  const commentsByPostId = await db('comments')
+    .join('users', 'users.id', 'comments.user_id')
+    .join('posts', 'posts.id', 'comments.post_id')
+    .select(
+      'comments.id as id',
+      'comments.user_id as user_id',
+      'comments.body as body',
+      'users.user_name as user_name',
+      'users.img_url as img_url',
+      'comments.parent_id as parent_id',
+      'comments.created_at as created_at',
+      'comments.post_id as post_id',
+    )
+    .first()
+    .where('comments.post_id', { postId })
+  return commentsByPostId as Comments[]
 }
 
 export async function addComment(newComment: NewCommentData) {
