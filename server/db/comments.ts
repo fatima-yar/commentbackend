@@ -16,6 +16,7 @@ export async function getCommentsById(id: number | string) {
 export async function getAllComments() {
   const commentsWithReplies = await db('comments')
     .join('users', 'users.id', 'comments.user_id')
+    .join('posts', 'posts.id', 'comments.post_id')
     .select(
       'comments.id as id',
       'comments.user_id as user_id',
@@ -24,6 +25,7 @@ export async function getAllComments() {
       'users.img_url as img_url',
       'comments.parent_id as parent_id',
       'comments.created_at as created_at',
+      'comments.post_id as post_id',
     )
   // .orderBy('comments.created_at', 'desc')
   return commentsWithReplies as Comments[]
@@ -43,6 +45,7 @@ export async function addComment(newComment: NewCommentData) {
   // Fetch the inserted comment along with user information
   const insertedComment = await db('comments')
     .join('users', 'users.id', 'comments.user_id')
+    // .join('posts', 'posts.id', 'comments.post_id')
     .select(
       'comments.id as id',
       'comments.user_id as user_id',
@@ -51,6 +54,7 @@ export async function addComment(newComment: NewCommentData) {
       'users.img_url as img_url',
       'comments.parent_id as parent_id',
       'comments.created_at as created_at',
+      // 'comments.post_id as post_id',
     )
     .where('comments.id', id)
     .first()

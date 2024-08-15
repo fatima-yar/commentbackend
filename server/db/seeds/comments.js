@@ -14,6 +14,7 @@ export async function seed(knex) {
       body: 'This is the first comment',
       parent_id: null,
       created_at: '2024-08-16T23:00:33.010+02:00',
+      post_id: 1,
     },
     {
       id: 2,
@@ -21,6 +22,7 @@ export async function seed(knex) {
       body: 'This is the second comment',
       parent_id: null,
       created_at: '2024-09-16T23:00:33.010+02:00',
+      post_id: 2,
     },
     {
       id: 3,
@@ -28,6 +30,7 @@ export async function seed(knex) {
       body: 'I wanna reply the first comment',
       parent_id: 1,
       created_at: '2024-10-16T23:00:33.010+02:00',
+      post_id: 1,
     },
     {
       id: 4,
@@ -35,6 +38,7 @@ export async function seed(knex) {
       body: 'I wanna reply the second comment',
       parent_id: 2,
       created_at: '2024-11-16T23:00:33.010+02:00',
+      post_id: 2,
     },
   ])
 }
