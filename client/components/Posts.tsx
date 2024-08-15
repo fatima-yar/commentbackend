@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { usePosts } from '../hooks/usePosts'
+import { usePosts } from '../hooks/useComments'
 import Comments from './comments/Comments'
 import { Post } from '../../models/post'
 
@@ -13,7 +13,7 @@ export default function Posts() {
   const handleCommentsToggle = (postId: number) => {
     // If the clicked post is already active, toggle it off; otherwise, set it as active
     setActivePostId((prevId) => (prevId === postId ? null : postId))
-    console.log('Posts.tsx-postd:', postId)
+    console.log('Posts.tsx-postId:', postId)
   }
 
   return (
@@ -25,7 +25,7 @@ export default function Posts() {
         {data &&
           data.map((post: Post) => (
             <li key={post.id} className="mb-4">
-              <div>{post}</div>
+              <div>{post.content}</div>
               <button
                 className="text-red-500"
                 onClick={() => handleCommentsToggle(post.id)}

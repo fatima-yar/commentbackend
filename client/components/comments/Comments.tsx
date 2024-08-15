@@ -5,6 +5,7 @@ import {
   addComment as addCommentApi,
   useDeleteComment,
   useUpdateComment,
+  getCommentsByPostId,
 } from '../../apis/comments'
 import Comment from './Comment'
 import CommentForm from './CommentForm'
@@ -112,19 +113,39 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
       },
     )
   }
-
   useEffect(() => {
     const fetchComments = async () => {
       try {
         console.log('Fetching comments for post ID:', postId) // Debug output
-        const data = await getAllComments(postId)
-        setBackendComments(data)
+        const data = await getCommentsByPostId(postId)
+
+        // Check if data is an array; if not, wrap it in an array
+        const commentsArray = Array.isArray(data) ? data : [data]
+        setBackendComments(commentsArray)
       } catch (error) {
         console.error('Failed to fetch comments', error)
       }
     }
     fetchComments()
   }, [postId])
+
+  // useEffect(() => {
+  //   const fetchComments = async () => {
+  //     try {
+  //       console.log('Fetching comments for post ID:', postId) // Debug output
+  //       const data = await getCommentsByPostId(postId)
+  //       if (Array.isArray(data)) {
+  //         setBackendComments(data)
+  //       } else {
+  //         console.error('Fetched data is not an array:', data)
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to fetch comments', error)
+  //     }
+  //   }
+  //   fetchComments()
+  // }, [postId])
+
   //   const [form, setForm] = useState('')
 
   // function handleSubmit(e: React.FormEvent<HTMLFormElement>){

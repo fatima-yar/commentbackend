@@ -41,7 +41,7 @@ router.get('/posts/comment/:post_id', async (req, res) => {
     const commentByPostId = await db.getCommentsByPostId(
       Number(req.params.post_id),
     )
-    res.json(commentByPostId)
+    res.json([commentByPostId]) //Update Wrap in an array
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: 'Something went wrong' })

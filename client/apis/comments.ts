@@ -1,6 +1,7 @@
 import request from 'superagent'
 import { Comments as CommentsInt } from '../../models/comments'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Post } from '../../models/post'
 
 export interface AddComment {
   body: string
@@ -13,7 +14,7 @@ export interface UpdateComment {
 }
 const rootUrl = '/api/v1/comments'
 
-export async function getAllComments(): Promise<string[]> {
+export async function getAllComments(postId: number): Promise<string[]> {
   const res = await request.get(rootUrl)
   return res.body.comments
 }
@@ -26,7 +27,28 @@ export async function getAllComments(): Promise<string[]> {
 //   await request.post(rootUrl + '/comments').send(newComment)
 //   // .auth(token, { type: 'bearer' })
 // }
+export function getPosts(): Promise<Post[]> {
+  return request.get(rootUrl + '/posts').then((res) => {
+    // Ensure the API response structure matches this expectation
+    return res.body.posts as Post[]
+  })
+}
+export async function getCommentsByPostId(id: number): Promise<Comments[]> {
+  try {
+    const res = await request.get(`${rootUrl}/posts/comment/${id}`)
+    // Assuming the response contains an array of comments
+    return res.body as CommentsInt[]
+  } catch (error) {
+    console.error('Error fetching comments by post ID:', error)
+    throw error // Propagate the error
+  }
+}
 
+// export function getCommentsByPostId(id: number) {
+//   const res = request.get(`${rootUrl}/posts/comment/${id}`)
+//   console.log('getCommentById', res)
+//   return res
+// }
 export async function addComment(
   comment: string,
   parent_id: number | null = null,
