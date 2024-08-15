@@ -2,11 +2,6 @@ import { comment } from 'postcss'
 import { Comments, NewComment, NewCommentData } from '../../models/comments'
 import db from '../db/connection'
 
-// export async function getAllComments(): Promise<Comments[]> {
-//   const comment = await db('comments').select()
-//   return comment
-// }
-
 export async function getCommentsById(id: number | string) {
   const comment = await db('comments').select().first().where({ id })
   return comment as Comment
@@ -27,16 +22,10 @@ export async function getAllComments() {
       'comments.created_at as created_at',
       'comments.post_id as post_id',
     )
+
   // .orderBy('comments.created_at', 'desc')
   return commentsWithReplies as Comments[]
 }
-
-// export async function addComment(newComment: NewCommentData) {
-//   const [id] = await db('comments').insert(newComment)
-//   const insertedComment = await db('comments').where({ id }).first()
-//   console.log('insertedComment:', insertedComment)
-//   return insertedComment
-// }
 
 export async function addComment(newComment: NewCommentData) {
   // Insert the new comment and get its ID
@@ -54,7 +43,7 @@ export async function addComment(newComment: NewCommentData) {
       'users.img_url as img_url',
       'comments.parent_id as parent_id',
       'comments.created_at as created_at',
-      // 'comments.post_id as post_id',
+      'comments.post_id as post_id',
     )
     .where('comments.id', id)
     .first()

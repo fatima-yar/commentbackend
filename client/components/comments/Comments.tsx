@@ -12,6 +12,7 @@ import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateComment } from '../../../server/db/comments'
 interface CommentsProps {
   currentUserId: number
+  postId: number
 }
 
 interface ActiveComment {
@@ -19,14 +20,15 @@ interface ActiveComment {
   type: 'replying' | 'editing'
 }
 
-export default function Comments({ currentUserId }: CommentsProps) {
+export default function Comments({ currentUserId, postId }: CommentsProps) {
+  console.log('Fetching comments for post ID:', postId)
   const [backendComments, setBackendComments] = useState<CommentsInt[]>([])
   const [activeComment, setActiveComment] = useState<ActiveComment | null>(null)
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parent_id === null,
   )
 
-  const { mutate: deleteCommentApi } = useDeleteComment() // Use the hook here
+  const { mutate: deleteCommentApi } = useDeleteComment()
   const { mutate: updateCommentApi } = useUpdateComment()
 
   function getReplies(commentId: number): CommentsInt[] {
@@ -39,7 +41,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
   }
 
   const addComment = (text: string, parent_id: number | null) => {
-    addCommentApi(text, parent_id)
+    addCommentApi(text, parent_id, postId)
       .then((comment: CommentsInt) => {
         if (comment) {
           // Ensure comment is not null
@@ -114,14 +116,15 @@ export default function Comments({ currentUserId }: CommentsProps) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const data = await getAllComments()
+        console.log('Fetching comments for post ID:', postId) // Debug output
+        const data = await getAllComments(postId)
         setBackendComments(data)
       } catch (error) {
         console.error('Failed to fetch comments', error)
       }
     }
     fetchComments()
-  }, [])
+  }, [postId])
   //   const [form, setForm] = useState('')
 
   // function handleSubmit(e: React.FormEvent<HTMLFormElement>){
@@ -141,8 +144,6 @@ export default function Comments({ currentUserId }: CommentsProps) {
 
   return (
     <div>
-      <h3>Comments</h3>
-      <div>Write Comment</div>
       <CommentForm
         submitLabel="Write"
         handleSubmit={(text) => addComment(text, null)}

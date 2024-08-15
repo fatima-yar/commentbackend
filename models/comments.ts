@@ -6,6 +6,7 @@ export interface Comments {
   img_url: string
   parent_id: number | null
   created_at: string
+  post_id: string
 }
 export interface NewComment {
   id: number

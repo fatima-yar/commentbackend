@@ -30,6 +30,7 @@ export async function getAllComments(): Promise<string[]> {
 export async function addComment(
   comment: string,
   parent_id: number | null = null,
+  post_id: number,
 ) {
   console.log('Api:', comment)
   const newComment = {
@@ -37,6 +38,7 @@ export async function addComment(
     parent_id: parent_id,
     user_id: 1,
     created_at: new Date().toISOString(),
+    post_id: post_id,
   }
 
   const res = await request.post(rootUrl).send(newComment)
