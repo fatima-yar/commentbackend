@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { usePosts } from '../hooks/useComments'
 import Comments from './comments/Comments'
 import { Post } from '../../models/post'
+import { comment } from 'postcss'
 
 export default function Posts() {
   const { data, error, loading } = usePosts()
@@ -26,7 +27,7 @@ export default function Posts() {
             <li key={post.id} className="mb-4">
               <div>{post.content}</div>
               <button
-                className="cursor-pointer border-none bg-transparent p-0"
+                className="flex cursor-pointer border-none bg-transparent p-1"
                 onClick={() => handleCommentsToggle(post.id)}
               >
                 <img
@@ -36,6 +37,7 @@ export default function Posts() {
                   }
                   className="h-6 w-6" // Adjust size as needed
                 />
+                Comments
               </button>
               {activePostId === post.id && (
                 <Comments currentUserId={1} postId={post.id} /> // Pass postId here
