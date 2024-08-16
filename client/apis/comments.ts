@@ -1,5 +1,6 @@
 import request from 'superagent'
-import { Comments as CommentsInt } from '../../models/comments'
+import { Comments, Comments as CommentsInt } from '../../models/comments'
+import { Post } from '../../models/post'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export interface AddComment {
@@ -11,52 +12,65 @@ export interface UpdateComment {
   body: string
   user_id: number
 }
+
 const rootUrl = '/api/v1/comments'
 
-export async function getAllComments(): Promise<string[]> {
+// Fetch all comments
+export async function getAllComments(): Promise<Comments[]> {
   const res = await request.get(rootUrl)
-  return res.body.comments
+  return res.body.comments as Comments[]
 }
 
-// export async function addComment(comment: string, parent_id =null) {
-//   const newComment: AddComment = {
-//     body: comment,
-//     parent_id
-//   }
-//   await request.post(rootUrl + '/comments').send(newComment)
-//   // .auth(token, { type: 'bearer' })
-// }
+// Fetch posts
+export function getPosts(): Promise<Post[]> {
+  return request.get(`${rootUrl}/posts`).then((res) => {
+    return res.body.posts as Post[]
+  })
+}
 
+// Fetch comments by post ID
+export async function getCommentsByPostId(id: number): Promise<Comments[]> {
+  try {
+    const res = await request.get(`${rootUrl}/posts/${id}/comments`)
+    return res.body as CommentsInt[]
+  } catch (error) {
+    console.error('Error fetching comments by post ID:', error)
+    throw error
+  }
+}
+
+// Add a new comment
 export async function addComment(
   comment: string,
   parent_id: number | null = null,
+  post_id: number,
 ) {
-  console.log('Api:', comment)
   const newComment = {
     body: comment,
-    parent_id: parent_id,
-    user_id: 1,
+    parent_id,
+    user_id: 1, // Or obtain this from context/session
     created_at: new Date().toISOString(),
+    post_id,
   }
 
   const res = await request.post(rootUrl).send(newComment)
-  console.log('res.body:', res.body)
   return res.body
 }
 
+// Delete a comment
 export async function deleteComment(id: number) {
-  await request.delete(`${rootUrl}/comments/${id}`)
+  await request.delete(`${rootUrl}/${id}`)
 }
 
+// Hook for deleting a comment
 export function useDeleteComment() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (id: number) => {
-      await request.delete(`${rootUrl}/${id}`)
+      await deleteComment(id)
     },
     onSuccess: () => {
-      // Invalidate the specific query to refresh data after a successful deletion
       queryClient.invalidateQueries({ queryKey: ['comments'] })
     },
     onError: (error: any) => {
@@ -65,6 +79,7 @@ export function useDeleteComment() {
   })
 }
 
+// Hook for updating a comment
 export function useUpdateComment() {
   const queryClient = useQueryClient()
 
@@ -76,26 +91,8 @@ export function useUpdateComment() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['comments'] })
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Failed to update comment', error)
     },
   })
 }
-// export function useUpdateComment() {
-//   const queryClient = useQueryClient()
-//   interface Props {
-//     id: number
-//     body: string
-//   }
-//   return useMutation({
-//     mutationFn: async (data: Props) => {
-//       const { id, body } = data
-//       console.log('Api body:', body)
-//       console.log('Api id:', id)
-//       await request.patch(${rootUrl}/${id}).send({ body })
-//     },
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['comments'] })
-//     },
-//   })
-// }

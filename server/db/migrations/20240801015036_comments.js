@@ -8,6 +8,7 @@ export async function up(knex) {
     table.string('body')
     table.integer('parent_id')
     table.timestamp('created_at').defaultTo(knex.fn.now())
+    table.integer('post_id')
   })
 }
 /**

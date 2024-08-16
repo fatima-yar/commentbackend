@@ -5,6 +5,7 @@ import {
   addComment as addCommentApi,
   useDeleteComment,
   useUpdateComment,
+  getCommentsByPostId,
 } from '../../apis/comments'
 import Comment from './Comment'
 import CommentForm from './CommentForm'
@@ -12,6 +13,7 @@ import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateComment } from '../../../server/db/comments'
 interface CommentsProps {
   currentUserId: number
+  postId: number
 }
 
 interface ActiveComment {
@@ -19,14 +21,15 @@ interface ActiveComment {
   type: 'replying' | 'editing'
 }
 
-export default function Comments({ currentUserId }: CommentsProps) {
+export default function Comments({ currentUserId, postId }: CommentsProps) {
+  // console.log('Fetching comments for post ID:', postId)
   const [backendComments, setBackendComments] = useState<CommentsInt[]>([])
   const [activeComment, setActiveComment] = useState<ActiveComment | null>(null)
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parent_id === null,
   )
 
-  const { mutate: deleteCommentApi } = useDeleteComment() // Use the hook here
+  const { mutate: deleteCommentApi } = useDeleteComment()
   const { mutate: updateCommentApi } = useUpdateComment()
 
   function getReplies(commentId: number): CommentsInt[] {
@@ -39,7 +42,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
   }
 
   const addComment = (text: string, parent_id: number | null) => {
-    addCommentApi(text, parent_id)
+    addCommentApi(text, parent_id, postId)
       .then((comment: CommentsInt) => {
         if (comment) {
           // Ensure comment is not null
@@ -114,14 +117,38 @@ export default function Comments({ currentUserId }: CommentsProps) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const data = await getAllComments()
-        setBackendComments(data)
+        console.log('Fetching comments for post ID:', postId) // Debug output
+        const data = await getCommentsByPostId(postId)
+        console.log('Fetched comments:', data) // Debug output
+
+        // Unwrap the array if data is wrapped in an additional array
+        const commentsArray =
+          Array.isArray(data) && Array.isArray(data[0]) ? data[0] : data
+        setBackendComments(commentsArray)
       } catch (error) {
         console.error('Failed to fetch comments', error)
       }
     }
     fetchComments()
-  }, [])
+  }, [postId])
+
+  // useEffect(() => {
+  //   const fetchComments = async () => {
+  //     try {
+  //       console.log('Fetching comments for post ID:', postId) // Debug output
+  //       const data = await getCommentsByPostId(postId)
+  //       if (Array.isArray(data)) {
+  //         setBackendComments(data)
+  //       } else {
+  //         console.error('Fetched data is not an array:', data)
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to fetch comments', error)
+  //     }
+  //   }
+  //   fetchComments()
+  // }, [postId])
+
   //   const [form, setForm] = useState('')
 
   // function handleSubmit(e: React.FormEvent<HTMLFormElement>){
@@ -141,8 +168,6 @@ export default function Comments({ currentUserId }: CommentsProps) {
 
   return (
     <div>
-      <h3>Comments</h3>
-      <div>Write Comment</div>
       <CommentForm
         submitLabel="Write"
         handleSubmit={(text) => addComment(text, null)}

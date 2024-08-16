@@ -15,6 +15,39 @@ router.get('/', async (req, res) => {
   }
 })
 
+//posts:
+router.get('/posts', async (req, res) => {
+  try {
+    const posts = await db.getAllPosts()
+
+    res.json({ posts })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Something went wrong' })
+  }
+})
+router.get('/posts/:id', async (req, res) => {
+  try {
+    const post = await db.getPostById(Number(req.params.id))
+    res.json(post)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Something went wrong' })
+  }
+})
+
+router.get('/posts/:post_id/comments', async (req, res) => {
+  try {
+    const commentByPostId = await db.getCommentsByPostId(
+      Number(req.params.post_id),
+    )
+    res.json([commentByPostId]) //Update Wrap in an array
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Something went wrong' })
+  }
+})
+
 router.get('/:id', async (req, res, next) => {
   try {
     const comment = await db.getCommentsById(req.params.id)
