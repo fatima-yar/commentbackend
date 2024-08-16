@@ -23,31 +23,10 @@ export default function CommentForm({
 
   const queryClient = useQueryClient()
 
-  // const addCommentMutation = useMutation({
-  //   mutationFn: async (body: string) => {
-  //     const parentId = parent_id ? Number(parent_id) : null
-  //     return addComment(body, parentId)
-  //   },
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({
-  //       queryKey: ['comments'],
-  //     })
-  //     window.location.reload()
-  //   },
-  //   onError: (error) => {
-  //     console.error('Error adding comment:', error)
-  //   },
-  // })
-
   useEffect(() => {
     setText(initialValue)
   }, [initialValue])
-  // const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault()
-  //   if (text.trim() === '') return
-  //   addCommentMutation.mutate(text)
-  //   setText('')
-  // }
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     handleSubmit(text)
@@ -56,7 +35,11 @@ export default function CommentForm({
   return (
     <>
       <form onSubmit={onSubmit}>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} />
+        <textarea
+          placeholder="Write a comment"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
         <button
           className="rounded-md bg-green-500 p-2"
           disabled={isTextareaDisabled}

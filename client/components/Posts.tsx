@@ -13,7 +13,6 @@ export default function Posts() {
   const handleCommentsToggle = (postId: number) => {
     // If the clicked post is already active, toggle it off; otherwise, set it as active
     setActivePostId((prevId) => (prevId === postId ? null : postId))
-    // console.log('Posts.tsx-postId:', postId)
   }
 
   return (
@@ -27,10 +26,16 @@ export default function Posts() {
             <li key={post.id} className="mb-4">
               <div>{post.content}</div>
               <button
-                className="text-red-500"
+                className="cursor-pointer border-none bg-transparent p-0"
                 onClick={() => handleCommentsToggle(post.id)}
               >
-                {activePostId === post.id ? 'Hide Comments' : 'Comments'}
+                <img
+                  src={activePostId === post.id ? '/c2.png' : '/c1.png'}
+                  alt={
+                    activePostId === post.id ? 'Hide Comments' : 'Show Comments'
+                  }
+                  className="h-6 w-6" // Adjust size as needed
+                />
               </button>
               {activePostId === post.id && (
                 <Comments currentUserId={1} postId={post.id} /> // Pass postId here
