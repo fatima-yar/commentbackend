@@ -51,8 +51,9 @@ export async function getCommentsByPostId(post_id: number) {
       'comments.created_at as created_at',
       'comments.post_id as post_id',
     )
-    .first()
-    .where({ post_id })
+    // .first()
+    .where('comments.post_id', post_id)
+  console.log(commentsByPostId)
   return commentsByPostId as Comments[]
 }
 
