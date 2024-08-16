@@ -36,7 +36,7 @@ router.get('/posts/:id', async (req, res) => {
   }
 })
 
-router.get('/posts/comment/:post_id', async (req, res) => {
+router.get('/posts/:post_id/comments', async (req, res) => {
   try {
     const commentByPostId = await db.getCommentsByPostId(
       Number(req.params.post_id),
