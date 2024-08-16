@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { Comments as CommentsInt } from '../../models/comments'
+import { Comments, Comments as CommentsInt } from '../../models/comments'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Post } from '../../models/post'
 
@@ -36,19 +36,14 @@ export function getPosts(): Promise<Post[]> {
 export async function getCommentsByPostId(id: number): Promise<Comments[]> {
   try {
     const res = await request.get(`${rootUrl}/posts/comment/${id}`)
-    // Assuming the response contains an array of comments
+
     return res.body as CommentsInt[]
   } catch (error) {
     console.error('Error fetching comments by post ID:', error)
-    throw error // Propagate the error
+    throw error
   }
 }
 
-// export function getCommentsByPostId(id: number) {
-//   const res = request.get(`${rootUrl}/posts/comment/${id}`)
-//   console.log('getCommentById', res)
-//   return res
-// }
 export async function addComment(
   comment: string,
   parent_id: number | null = null,

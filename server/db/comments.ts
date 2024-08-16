@@ -58,13 +58,12 @@ export async function getCommentsByPostId(post_id: number) {
 }
 
 export async function addComment(newComment: NewCommentData) {
-  // Insert the new comment and get its ID
   const [id] = await db('comments').insert(newComment)
 
   // Fetch the inserted comment along with user information
   const insertedComment = await db('comments')
     .join('users', 'users.id', 'comments.user_id')
-    // .join('posts', 'posts.id', 'comments.post_id')
+    .join('posts', 'posts.id', 'comments.post_id')
     .select(
       'comments.id as id',
       'comments.user_id as user_id',
