@@ -22,7 +22,7 @@ interface ActiveComment {
 }
 
 export default function Comments({ currentUserId, postId }: CommentsProps) {
-  console.log('Fetching comments for post ID:', postId)
+  // console.log('Fetching comments for post ID:', postId)
   const [backendComments, setBackendComments] = useState<CommentsInt[]>([])
   const [activeComment, setActiveComment] = useState<ActiveComment | null>(null)
   const rootComments = backendComments.filter(
@@ -116,7 +116,7 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        console.log('Fetching comments for post ID:', postId) // Debug output
+        // console.log('Fetching comments for post ID:', postId) // Debug output
         const data = await getCommentsByPostId(postId)
 
         // Check if data is an array; if not, wrap it in an array

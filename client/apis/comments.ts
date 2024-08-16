@@ -54,7 +54,7 @@ export async function addComment(
   parent_id: number | null = null,
   post_id: number,
 ) {
-  console.log('Api:', comment)
+  // console.log('Api:', comment)
   const newComment = {
     body: comment,
     parent_id: parent_id,
@@ -64,7 +64,7 @@ export async function addComment(
   }
 
   const res = await request.post(rootUrl).send(newComment)
-  console.log('res.body:', res.body)
+  // console.log('res.body:', res.body)
   return res.body
 }
 

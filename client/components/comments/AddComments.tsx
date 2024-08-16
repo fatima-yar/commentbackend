@@ -28,7 +28,7 @@ export default function AddComments() {
   }
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    console.log(form)
+    // console.log(form)
     addCommentMutation.mutate({
       body: form,
       parent_id: null,

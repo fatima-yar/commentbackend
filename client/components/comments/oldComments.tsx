@@ -40,7 +40,7 @@ export default function Comments({ currentUserId }: CommentsProps) {
       )
   }
   const addComment = (text: string, parentId: string | null) => {
-    console.log(text, parentId)
+    // console.log(text, parentId)
     createCommentApi(text, parentId)
       .then((comment: CommentData) => {
         setBackendComments([comment, ...backendComments])

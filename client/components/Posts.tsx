@@ -13,7 +13,7 @@ export default function Posts() {
   const handleCommentsToggle = (postId: number) => {
     // If the clicked post is already active, toggle it off; otherwise, set it as active
     setActivePostId((prevId) => (prevId === postId ? null : postId))
-    console.log('Posts.tsx-postId:', postId)
+    // console.log('Posts.tsx-postId:', postId)
   }
 
   return (
