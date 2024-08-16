@@ -117,11 +117,8 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        console.log('Fetching comments for post ID:', postId) // Debug output
         const data = await getCommentsByPostId(postId)
-        console.log('Fetched comments:', data) // Debug output
 
-        // Unwrap the array if data is wrapped in an additional array
         const commentsArray =
           Array.isArray(data) && Array.isArray(data[0]) ? data[0] : data
         setBackendComments(commentsArray)
