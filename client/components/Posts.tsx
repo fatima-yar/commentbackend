@@ -3,18 +3,8 @@ import { usePosts, useCommentCount } from '../hooks/useComments'
 import Comments from './comments/Comments'
 import { Post } from '../../models/post'
 
-// Component to display the comment count for a specific post
-function PostWithCommentCount({ postId }: { postId: number }) {
-  const { data: commentCount, isLoading, error } = useCommentCount(postId)
-
-  if (isLoading) return <div>Loading comment count...</div>
-  if (error) return <div>Error loading comment count</div>
-
-  return <div>{commentCount} Comments</div>
-}
-
 export default function Posts() {
-  const { data: posts, error, isLoading } = usePosts()
+  const { data, error, isLoading } = usePosts()
   const [activePostId, setActivePostId] = useState<number | null>(null) // Track active post
 
   if (isLoading) return <div>Loading...</div>
@@ -31,11 +21,12 @@ export default function Posts() {
         Here are some Bullshits that I've copied from a random website!
       </h1>
       <ul>
-        {posts &&
-          posts.map((post: Post) => (
+        {data &&
+          data.map((post: Post) => (
             <li key={post.id} className="mb-4">
               <div>{post.content}</div>
-              <PostWithCommentCount postId={post.id} />
+              {/* Fetch comment count for each post */}
+              <CommentCount postId={post.id} />
               <button
                 className="flex cursor-pointer border-none bg-transparent p-1"
                 onClick={() => handleCommentsToggle(post.id)}
@@ -57,4 +48,14 @@ export default function Posts() {
       </ul>
     </div>
   )
+}
+
+// Component to display comment count
+function CommentCount({ postId }: { postId: number }) {
+  const { data: commentCount, isLoading, error } = useCommentCount(postId)
+
+  if (isLoading) return <span>Loading comment count...</span>
+  if (error) return <span>Error loading comment count</span>
+
+  return <span>Comments: {commentCount || 0}</span>
 }
