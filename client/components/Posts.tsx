@@ -15,6 +15,16 @@ export default function Posts() {
     setActivePostId((prevId) => (prevId === postId ? null : postId))
   }
 
+  // Component to display comment count
+  function CommentCount({ postId }: { postId: number }) {
+    const { data: commentCount, isLoading, error } = useCommentCount(postId)
+
+    if (isLoading) return <span>Loading comment count...</span>
+    if (error) return <span>Error loading comment count</span>
+
+    return <span>Comments: {commentCount || 0}</span>
+  }
+
   return (
     <div className="app">
       <h1 className="pb-8 text-xl">
@@ -26,7 +36,7 @@ export default function Posts() {
             <li key={post.id} className="mb-4">
               <div>{post.content}</div>
               {/* Fetch comment count for each post */}
-              <CommentCount postId={post.id} />
+
               <button
                 className="flex cursor-pointer border-none bg-transparent p-1"
                 onClick={() => handleCommentsToggle(post.id)}
@@ -38,7 +48,8 @@ export default function Posts() {
                   }
                   className="h-6 w-6" // Adjust size as needed
                 />
-                Comments
+
+                <CommentCount postId={post.id} />
               </button>
               {activePostId === post.id && (
                 <Comments currentUserId={1} postId={post.id} /> // Pass postId here
@@ -48,14 +59,4 @@ export default function Posts() {
       </ul>
     </div>
   )
-}
-
-// Component to display comment count
-function CommentCount({ postId }: { postId: number }) {
-  const { data: commentCount, isLoading, error } = useCommentCount(postId)
-
-  if (isLoading) return <span>Loading comment count...</span>
-  if (error) return <span>Error loading comment count</span>
-
-  return <span>Comments: {commentCount || 0}</span>
 }

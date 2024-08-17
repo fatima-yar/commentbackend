@@ -25,33 +25,23 @@ export function useComments() {
 }
 
 // Define type for variables including post_id
-interface CommentMutationVariables {
-  body: string
-  parent_id: number | null
-  post_id: number
-}
 
 // Custom hook for mutation
-export function useCommentsMutation<TData = unknown>(
-  mutationFn: MutationFunction<TData, CommentMutationVariables>,
+
+export function useCommentsMutation<TData = unknown, TVariables = unknown>(
+  mutationFn: MutationFunction<TData, TVariables>,
+  queryKey: string[],
 ) {
   const queryClient = useQueryClient()
-
-  return useMutation({
+  const mutation = useMutation({
     mutationFn,
-    onSuccess: (data, variables) => {
-      // Invalidate comments query to refetch all comments
-      queryClient.invalidateQueries({ queryKey: ['comments'] })
-
-      // Invalidate the comment count for the specific post
-      queryClient.invalidateQueries({
-        queryKey: ['commentCount', variables.post_id],
-      })
-    },
-    onError: (error: any) => {
-      console.error('Failed to perform mutation', error)
+    onSuccess: () => {
+      // Invalidate queries associated with the mutation
+      queryClient.invalidateQueries({ queryKey })
     },
   })
+
+  return mutation
 }
 
 // Fetch comments by post ID
