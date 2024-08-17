@@ -107,3 +107,16 @@ export function useUpdateComment() {
     },
   })
 }
+
+// API method to handle inserting likes
+export async function insertLike(postId: number, increment: boolean) {
+  try {
+    const res = await request
+      .post(`${rootUrl}/posts/${postId}/like`)
+      .send({ increment })
+    return res.body
+  } catch (error) {
+    console.error('Error inserting like:', error)
+    throw error
+  }
+}

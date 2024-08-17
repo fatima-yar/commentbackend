@@ -108,3 +108,26 @@ export async function deleteComment(id: number) {
 export async function updateComment(id: number, body: Record<string, any>) {
   return db('comments').where({ id }).update({ body })
 }
+
+export async function addLike(id: number) {
+  return db('posts').where({ id }).increment('likes', 1)
+}
+// Backend function to handle like toggling
+export async function updateLike(postId: number, increment: boolean) {
+  try {
+    const amount = increment ? 1 : -1
+    const [updatedPost] = await db('posts')
+      .where({ id: postId })
+      .increment('likes', amount)
+      .returning(['id', 'likes'])
+
+    if (!updatedPost) {
+      throw new Error('Post not found')
+    }
+
+    return updatedPost
+  } catch (error) {
+    console.error('Error updating like count:', error)
+    throw error
+  }
+}

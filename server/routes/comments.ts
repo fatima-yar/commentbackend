@@ -108,4 +108,19 @@ router.patch('/:id', async (req, res) => {
     res.sendStatus(500)
   }
 })
+router.post('/posts/:postId/like', async (req, res) => {
+  const { postId } = req.params
+  const { increment } = req.body // Expect a boolean value
+
+  try {
+    const updatedPost = await db.updateLike(Number(postId), increment)
+    res.status(200).send({
+      message: 'Post like count updated successfully!',
+      likes: updatedPost.likes,
+    })
+  } catch (error) {
+    res.status(500).send({ error: 'Failed to update like count' })
+  }
+})
+
 export default router

@@ -9,6 +9,7 @@ import {
   getCommentsByPostId,
   getPosts,
   getCommentCountByPostId,
+  insertLike,
 } from '../apis/comments.ts'
 import { Post } from '../../models/post.ts'
 import { Comments } from '../../models/comments.ts'
@@ -77,4 +78,20 @@ export function usePosts() {
   return {
     ...query,
   }
+}
+
+export function useInsertLike() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (data: { postId: number; increment: boolean }) => {
+      await insertLike(data.postId, data.increment)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+    },
+    onError: (error: unknown) => {
+      console.error('Failed to insert like', error)
+    },
+  })
 }

@@ -5,6 +5,7 @@ export async function up(knex) {
   return knex.schema.createTable('posts', (table) => {
     table.increments('id')
     table.string('content')
+    table.integer('likes').defaultTo(0)
   })
 }
 
