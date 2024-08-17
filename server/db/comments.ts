@@ -57,6 +57,17 @@ export async function getCommentsByPostId(post_id: number) {
   return commentsByPostId as Comments[]
 }
 
+export async function getCommentCountByPostId(
+  post_id: number,
+): Promise<number> {
+  const countResult = await db('comments')
+    .where({ post_id })
+    .count('* as count')
+    .first()
+
+  return countResult ? Number(countResult.count) : 0
+}
+
 export async function addComment(newComment: NewCommentData) {
   const [id] = await db('comments').insert(newComment)
 

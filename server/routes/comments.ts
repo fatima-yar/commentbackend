@@ -57,6 +57,17 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+router.get('/posts/:post_id/comments/count', async (req, res) => {
+  try {
+    const postId = Number(req.params.post_id)
+    const commentCount = await db.getCommentCountByPostId(postId)
+    res.json({ count: commentCount })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: 'Something went wrong' })
+  }
+})
+
 router.post('/', async (req, res) => {
   try {
     const newComment = req.body

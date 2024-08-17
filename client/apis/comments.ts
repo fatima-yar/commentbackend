@@ -39,6 +39,17 @@ export async function getCommentsByPostId(id: number): Promise<Comments[]> {
   }
 }
 
+// Fetch comment count by post ID
+export async function getCommentCountByPostId(id: number): Promise<number> {
+  try {
+    const res = await request.get(`${rootUrl}/posts/${id}/comments/count`)
+    return res.body.count as number
+  } catch (error) {
+    console.error('Error fetching comment count by post ID:', error)
+    throw error
+  }
+}
+
 // Add a new comment
 export async function addComment(
   comment: string,

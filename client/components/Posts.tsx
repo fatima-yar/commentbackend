@@ -1,14 +1,23 @@
 import { useState } from 'react'
-import { usePosts } from '../hooks/useComments'
+import { usePosts, useCommentCount } from '../hooks/useComments'
 import Comments from './comments/Comments'
 import { Post } from '../../models/post'
-import { comment } from 'postcss'
+
+// Component to display the comment count for a specific post
+function PostWithCommentCount({ postId }: { postId: number }) {
+  const { data: commentCount, isLoading, error } = useCommentCount(postId)
+
+  if (isLoading) return <div>Loading comment count...</div>
+  if (error) return <div>Error loading comment count</div>
+
+  return <div>{commentCount} Comments</div>
+}
 
 export default function Posts() {
-  const { data, error, loading } = usePosts()
+  const { data: posts, error, isLoading } = usePosts()
   const [activePostId, setActivePostId] = useState<number | null>(null) // Track active post
 
-  if (loading) return <div>Loading...</div>
+  if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading posts: {error.message}</div>
 
   const handleCommentsToggle = (postId: number) => {
@@ -22,10 +31,11 @@ export default function Posts() {
         Here are some Bullshits that I've copied from a random website!
       </h1>
       <ul>
-        {data &&
-          data.map((post: Post) => (
+        {posts &&
+          posts.map((post: Post) => (
             <li key={post.id} className="mb-4">
               <div>{post.content}</div>
+              <PostWithCommentCount postId={post.id} />
               <button
                 className="flex cursor-pointer border-none bg-transparent p-1"
                 onClick={() => handleCommentsToggle(post.id)}
