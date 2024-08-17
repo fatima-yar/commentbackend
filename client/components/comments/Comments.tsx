@@ -129,40 +129,6 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
     fetchComments()
   }, [postId])
 
-  // useEffect(() => {
-  //   const fetchComments = async () => {
-  //     try {
-  //       console.log('Fetching comments for post ID:', postId) // Debug output
-  //       const data = await getCommentsByPostId(postId)
-  //       if (Array.isArray(data)) {
-  //         setBackendComments(data)
-  //       } else {
-  //         console.error('Fetched data is not an array:', data)
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to fetch comments', error)
-  //     }
-  //   }
-  //   fetchComments()
-  // }, [postId])
-
-  //   const [form, setForm] = useState('')
-
-  // function handleSubmit(e: React.FormEvent<HTMLFormElement>){
-  // e.preventDefault()
-  // addCommentMutation.mutate(
-  //   { body: form,
-  //     parent_id
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       window.location.reload()
-  //     },
-  //   },
-  // )
-  // setForm('')
-  // }
-
   return (
     <div>
       <CommentForm
