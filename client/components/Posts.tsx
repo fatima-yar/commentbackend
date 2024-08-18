@@ -1,19 +1,28 @@
 import { useState } from 'react'
-import { usePosts } from '../hooks/useComments'
+import { usePosts, useCommentCount } from '../hooks/useComments'
 import Comments from './comments/Comments'
 import { Post } from '../../models/post'
-import { comment } from 'postcss'
 
 export default function Posts() {
-  const { data, error, loading } = usePosts()
+  const { data, error, isLoading } = usePosts()
   const [activePostId, setActivePostId] = useState<number | null>(null) // Track active post
 
-  if (loading) return <div>Loading...</div>
+  if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading posts: {error.message}</div>
 
   const handleCommentsToggle = (postId: number) => {
     // If the clicked post is already active, toggle it off; otherwise, set it as active
     setActivePostId((prevId) => (prevId === postId ? null : postId))
+  }
+
+  // Component to display comment count
+  function CommentCount({ postId }: { postId: number }) {
+    const { data: commentCount, isLoading, error } = useCommentCount(postId)
+
+    if (isLoading) return <span>Loading comment count...</span>
+    if (error) return <span>Error loading comment count</span>
+
+    return <span>Comments: {commentCount || 0}</span>
   }
 
   return (
@@ -26,6 +35,8 @@ export default function Posts() {
           data.map((post: Post) => (
             <li key={post.id} className="mb-4">
               <div>{post.content}</div>
+              {/* Fetch comment count for each post */}
+
               <button
                 className="flex cursor-pointer border-none bg-transparent p-1"
                 onClick={() => handleCommentsToggle(post.id)}
@@ -37,7 +48,8 @@ export default function Posts() {
                   }
                   className="h-6 w-6" // Adjust size as needed
                 />
-                Comments
+
+                <CommentCount postId={post.id} />
               </button>
               {activePostId === post.id && (
                 <Comments currentUserId={1} postId={post.id} /> // Pass postId here
