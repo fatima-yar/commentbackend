@@ -44,26 +44,36 @@ const Comment: React.FC<CommentProps> = ({
     activeComment.id === comment.id &&
     activeComment.type === 'editing'
   return (
-    <div className="pl-4 pt-8" key={comment.id}>
-      <div className="flex gap-2">
-        <img src={`./${comment.img_url}.png`} alt="icon" width="40px" />
-        <div className="text-lg">{comment.user_name}</div>
-        <div className="pt-2 text-xs ">{createAt}</div>
+    <div className="pb-4 pl-4 pt-4" key={comment.id}>
+      <div className="flex items-start gap-2">
+        <img
+          className="pb-2"
+          src={`./${comment.img_url}.png`}
+          alt="icon"
+          width="40px"
+        />
+        <div className="flex flex-col justify-center">
+          <div className="text-lg">{comment.user_name}</div>
+          <div className="pb-2 pt-1 text-xs text-gray-500">{createAt}</div>
+        </div>
       </div>
 
-      {!isEditing && <div className="text-lg">{comment.body}</div>}
+      {!isEditing && (
+        <div className="rounded-lg bg-gray-100 p-2 text-lg">{comment.body}</div>
+      )}
       {isEditing && (
         <CommentForm
-          submitLabel="Update"
+          submitLabel="✓"
           hasCancelButton
           initialValue={comment.body}
           handleSubmit={(text) => updateComment(comment.id, text)}
           handleCancel={() => setActiveComment(null)}
         />
       )}
-      <div className="flex gap-2 text-sm text-gray-500">
+      <div className="flex gap-2 text-sm ">
         {canReply && (
           <button
+            className="mt-2 rounded-md bg-gray-300 p-2 text-sm hover:bg-gray-400"
             onClick={() =>
               setActiveComment({ id: comment.id, type: 'replying' })
             }
@@ -73,6 +83,7 @@ const Comment: React.FC<CommentProps> = ({
         )}
         {canEdit && (
           <button
+            className="mt-2 rounded-md bg-gray-300 p-2 text-sm hover:bg-gray-400"
             onClick={() =>
               setActiveComment({ id: comment.id, type: 'editing' })
             }
@@ -81,7 +92,12 @@ const Comment: React.FC<CommentProps> = ({
           </button>
         )}
         {canDelete && (
-          <button onClick={() => deleteComment(comment.id)}>Delete</button>
+          <button
+            className="mt-2 rounded-md bg-gray-300 p-2 text-sm hover:bg-gray-400"
+            onClick={() => deleteComment(comment.id)}
+          >
+            Delete
+          </button>
         )}
       </div>
       {isReplying && (
@@ -92,7 +108,7 @@ const Comment: React.FC<CommentProps> = ({
         />
       )}
 
-      <div className=" text-gray-600">
+      <div className="">
         {replies.length > 0 && (
           <div style={{ marginLeft: '20px' }}>
             {' '}

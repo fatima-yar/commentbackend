@@ -90,10 +90,7 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
       })
     }
   }
-  // const updateComment = (id: number, body: string) => {
-  //   console.log('Component:', body)
-  //   updateCommentApi({ id, body })
-  // }
+
   const updateComment = (id: number, body: string) => {
     updateCommentApi(
       { id, body, user_id: currentUserId },

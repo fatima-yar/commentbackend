@@ -2,7 +2,11 @@
 export default {
   content: ['./index.html', './client/**/*.tsx'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        org: '#e28a17',
+      },
+    },
   },
   plugins: [],
 }

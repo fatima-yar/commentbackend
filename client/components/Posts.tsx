@@ -26,19 +26,23 @@ export default function Posts() {
   }
 
   return (
-    <div className="app">
-      <h1 className="pb-8 text-xl">
-        Here are some Bullshits that I've copied from a random website!
+    <div className="pl-16 pr-16 pt-20">
+      <h1 className="bg-org mb-16 rounded-xl bg-opacity-80 pb-8  pt-8 text-center font-mono text-4xl">
+        Here are some fun facts about the technology!!
       </h1>
-      <ul>
+      <ul className="">
         {data &&
           data.map((post: Post) => (
-            <li key={post.id} className="mb-4">
-              <div>{post.content}</div>
-              {/* Fetch comment count for each post */}
+            <li
+              key={post.id}
+              className="mb-2 rounded-xl bg-green-200 p-4 font-mono text-lg"
+            >
+              <div className="my-4 border-b border-gray-700 pb-8">
+                {post.content}
+              </div>
 
               <button
-                className="flex cursor-pointer border-none bg-transparent p-1"
+                className="flex cursor-pointer rounded-md border-none bg-transparent p-2 hover:bg-gray-200"
                 onClick={() => handleCommentsToggle(post.id)}
               >
                 <img
@@ -46,13 +50,13 @@ export default function Posts() {
                   alt={
                     activePostId === post.id ? 'Hide Comments' : 'Show Comments'
                   }
-                  className="h-6 w-6" // Adjust size as needed
+                  className="h-6 w-6"
                 />
 
                 <CommentCount postId={post.id} />
               </button>
               {activePostId === post.id && (
-                <Comments currentUserId={1} postId={post.id} /> // Pass postId here
+                <Comments currentUserId={1} postId={post.id} />
               )}
             </li>
           ))}
