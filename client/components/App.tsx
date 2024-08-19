@@ -1,15 +1,11 @@
-import { useFruits } from '../hooks/useFruits.ts'
-import AddComments from './comments/AddComments.tsx'
-import Comments from './comments/Comments.tsx'
+import { TypeAnimation } from 'react-type-animation'
 import Posts from './Posts.tsx'
-import bg from '../../public/bg.jpg'
-function App() {
-  const { data } = useFruits()
 
+function App() {
   return (
     <>
       <div
-        className="bg-opacity-60"
+        className=""
         style={{
           backgroundImage: 'url(../../public/bg.jpg)',
           backgroundSize: 'auto',
@@ -18,6 +14,24 @@ function App() {
         }}
       >
         <Posts />
+        <div className="flex items-center justify-center pb-8   pt-4 backdrop-blur-sm ">
+          <TypeAnimation
+            sequence={[
+              'Created By Fatima',
+              1000,
+              'Created By React',
+              1000,
+              'Created By TypeScript',
+              1000,
+              'Created By Enthusiasm!',
+              1000,
+            ]}
+            wrapper="span"
+            speed={50}
+            style={{ fontSize: '1em', display: 'inline-block' }}
+            repeat={Infinity}
+          />
+        </div>
       </div>
     </>
   )

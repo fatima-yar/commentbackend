@@ -26,7 +26,7 @@ export default function Posts() {
   }
 
   return (
-    <div className="pl-16 pr-16 pt-20">
+    <div className="pb-20 pl-16 pr-16 pt-20">
       <h1 className="bg-org mb-16 rounded-xl bg-opacity-80 pb-8  pt-8 text-center font-mono text-4xl">
         Here are some fun facts about the technology!!
       </h1>
@@ -35,14 +35,14 @@ export default function Posts() {
           data.map((post: Post) => (
             <li
               key={post.id}
-              className="mb-2 rounded-xl bg-green-200 p-4 font-mono text-lg"
+              className="mb-8 rounded-xl bg-gray-100 p-4 font-mono text-lg"
             >
               <div className="my-4 border-b border-gray-700 pb-8">
                 {post.content}
               </div>
 
               <button
-                className="flex cursor-pointer rounded-md border-none bg-transparent p-2 hover:bg-gray-200"
+                className="flex cursor-pointer rounded-md border-none bg-transparent p-2 hover:scale-105 hover:bg-gray-200"
                 onClick={() => handleCommentsToggle(post.id)}
               >
                 <img

@@ -11,7 +11,7 @@ export async function seed(knex) {
     {
       id: 1,
       user_id: 1,
-      body: 'This is the first comment',
+      body: 'What if a mouse caused the problem?',
       parent_id: null,
       created_at: '2024-08-16T23:00:33.010+02:00',
       post_id: 1,
@@ -19,7 +19,7 @@ export async function seed(knex) {
     {
       id: 2,
       user_id: 2,
-      body: 'This is the second comment',
+      body: 'This is the website!! : https://info.cern.ch/',
       parent_id: null,
       created_at: '2024-09-16T23:00:33.010+02:00',
       post_id: 2,
@@ -27,7 +27,7 @@ export async function seed(knex) {
     {
       id: 3,
       user_id: 2,
-      body: 'I wanna reply the first comment',
+      body: 'Probably we would call the bugs, mice and the mouse cockroach',
       parent_id: 1,
       created_at: '2024-10-16T23:00:33.010+02:00',
       post_id: 1,
@@ -35,7 +35,7 @@ export async function seed(knex) {
     {
       id: 4,
       user_id: 3,
-      body: 'I wanna reply the second comment',
+      body: 'I clearly remember that!',
       parent_id: 2,
       created_at: '2024-11-16T23:00:33.010+02:00',
       post_id: 2,

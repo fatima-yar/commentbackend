@@ -39,10 +39,10 @@ export default function CommentForm({
           placeholder="Write a comment"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="mb-2 w-full rounded-l  pl-2"
+          className="mb-2 mt-2 w-full  rounded-l  pl-2"
         />
         <button
-          className="rounded-md bg-gray-300 p-2 text-sm hover:bg-gray-400"
+          className="rounded-md bg-green-300 p-2 text-sm hover:scale-105"
           disabled={isTextareaDisabled}
         >
           {submitLabel}
@@ -50,7 +50,7 @@ export default function CommentForm({
         {hasCancelButton && (
           <button
             type="button"
-            className="ml-2 rounded-md bg-gray-300 p-2 text-sm hover:bg-gray-400"
+            className="ml-2 rounded-md bg-red-400 p-2 text-sm hover:scale-105"
             onClick={handleCancel}
           >
             𐄂
