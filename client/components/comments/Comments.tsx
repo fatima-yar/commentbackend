@@ -28,7 +28,7 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
   const rootComments = backendComments.filter(
     (backendComment) => backendComment.parent_id === null,
   )
-
+  const queryClient = useQueryClient()
   const { mutate: deleteCommentApi } = useDeleteComment()
   const { mutate: updateCommentApi } = useUpdateComment()
 
@@ -48,6 +48,8 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
           // Ensure comment is not null
           setBackendComments([comment, ...backendComments])
           setActiveComment(null)
+          // Invalidate the comment count query to refresh it
+          queryClient.invalidateQueries(['commentCount', postId])
         } else {
           console.error('Received null comment from API')
         }
@@ -57,24 +59,6 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
       })
   }
 
-  // const queryClient = useQueryClient()
-  // interface MutationProps {
-  //   post: string
-  //   parent_id: number | null
-  // }
-  // const addCommentMutation  = useMutation({
-  //   mutationFn: async (props:MutationProps)=>{
-
-  //     return addCommentApi (props.post, props.parent_id)
-
-  //   },
-  //   onSuccess:()=>{
-  //     queryClient.invalidateQueries({
-  //       queryKey:['comments']
-  //     })
-  //   }
-  // })
-
   const deleteComment = (commentId: number) => {
     if (window.confirm('Are you sure?')) {
       deleteCommentApi(commentId, {
@@ -83,6 +67,8 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
             (backendComment) => backendComment.id !== commentId,
           )
           setBackendComments(updatedBackendComments)
+          // Invalidate the comment count query to refresh it
+          queryClient.invalidateQueries(['commentCount', postId])
         },
         onError: (error: unknown) => {
           console.error('Failed to delete comment', error)
@@ -103,6 +89,8 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
             ),
           )
           setActiveComment(null)
+          // Invalidate the comment count query to refresh it
+          queryClient.invalidateQueries(['commentCount', postId as number])
         },
         onError: (error) => {
           console.error('Failed to update comment', error)

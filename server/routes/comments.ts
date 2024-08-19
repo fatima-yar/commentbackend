@@ -97,8 +97,8 @@ router.patch('/:id', async (req, res) => {
   try {
     const id = Number(req.params.id)
     const updatedComment = req.body.body
-    console.log('Updating comment with ID:', id)
-    console.log('Update data:', updatedComment)
+    // console.log('Updating comment with ID:', id)
+    // console.log('Update data:', updatedComment)
 
     await db.updateComment(id, updatedComment)
 
