@@ -21,7 +21,7 @@ export async function seed(knex) {
       user_id: 2,
       body: 'This is the website!! : https://info.cern.ch/',
       parent_id: null,
-      created_at: '2024-09-16T23:00:33.010+02:00',
+      created_at: '2024-02-16T23:00:33.010+02:00',
       post_id: 2,
     },
     {
@@ -29,7 +29,7 @@ export async function seed(knex) {
       user_id: 2,
       body: 'Probably we would call the bugs, mice and the mouse cockroach',
       parent_id: 1,
-      created_at: '2024-10-16T23:00:33.010+02:00',
+      created_at: '2024-01-16T23:00:33.010+02:00',
       post_id: 1,
     },
     {
@@ -37,7 +37,7 @@ export async function seed(knex) {
       user_id: 3,
       body: 'I clearly remember that!',
       parent_id: 2,
-      created_at: '2024-11-16T23:00:33.010+02:00',
+      created_at: '2024-01-16T23:00:33.010+02:00',
       post_id: 2,
     },
   ])

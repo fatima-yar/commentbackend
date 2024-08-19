@@ -44,7 +44,7 @@ const Comment: React.FC<CommentProps> = ({
     activeComment.id === comment.id &&
     activeComment.type === 'editing'
   return (
-    <div className="pb-4 pl-4 pt-4" key={comment.id}>
+    <div className="pb-4 pl-2 pr-2 pt-4" key={comment.id}>
       <div className="mb-2 mt-6   flex items-start gap-2">
         <img
           className="pb-2"
@@ -59,7 +59,7 @@ const Comment: React.FC<CommentProps> = ({
       </div>
 
       {!isEditing && (
-        <div className="w-[50%] rounded-lg bg-gray-300 p-2 text-lg">
+        <div className="rounded-lg bg-gray-300 p-2 text-lg lg:w-[50%]">
           {comment.body}
         </div>
       )}

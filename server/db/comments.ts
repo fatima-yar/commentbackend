@@ -53,7 +53,7 @@ export async function getCommentsByPostId(post_id: number) {
     )
     // .first()
     .where('comments.post_id', post_id)
-  console.log(commentsByPostId)
+  // console.log(commentsByPostId)
   return commentsByPostId as Comments[]
 }
 
@@ -89,7 +89,7 @@ export async function addComment(newComment: NewCommentData) {
     .first()
 
   // Log the inserted comment with user information
-  console.log('insertedComment:', insertedComment)
+  // console.log('insertedComment:', insertedComment)
 
   return insertedComment
 }

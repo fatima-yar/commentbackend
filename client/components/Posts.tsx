@@ -26,8 +26,8 @@ export default function Posts() {
   }
 
   return (
-    <div className="pb-20 pl-16 pr-16 pt-20">
-      <h1 className="bg-org mb-16 rounded-xl bg-opacity-80 pb-8  pt-8 text-center font-mono text-4xl">
+    <div className="pb-20 pl-4 pr-4 pt-20 lg:pl-20 lg:pr-20">
+      <h1 className="mb-16 rounded-xl bg-org bg-opacity-80 pb-8  pt-8 text-center font-mono text-4xl">
         Here are some fun facts about the technology!!
       </h1>
       <ul className="">
