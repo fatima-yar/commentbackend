@@ -117,7 +117,7 @@ export default function Comments({ currentUserId, postId }: CommentsProps) {
   return (
     <div>
       <CommentForm
-        submitLabel="Write"
+        submitLabel="Post"
         handleSubmit={(text) => addComment(text, null)}
         parent_id={null}
         hasCancelButton={false}
