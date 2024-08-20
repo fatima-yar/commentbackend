@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     >
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-        <ReactQueryDevtools />
+        {/* <ReactQueryDevtools /> */}
       </QueryClientProvider>
     </Auth0Provider>,
   )
