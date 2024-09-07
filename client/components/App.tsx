@@ -1,5 +1,6 @@
 import { TypeAnimation } from 'react-type-animation'
 import Posts from './Posts.tsx'
+import Reaction from './comments/Reaction.tsx'
 
 function App() {
   return (
